@@ -10,7 +10,7 @@ contributions.
 ## Reporting a Vulnerability
 
 If you believe you have found a security vulnerability, please send an email to
-edwin@phantasmlabs.com. Please include as many details as possible, these may
+edwin@phantasmlabs.com. Please include as many details as possible. These may
 include:
 
 - A detailed description of the issue.
