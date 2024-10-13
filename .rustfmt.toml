@@ -1,0 +1,7 @@
+wrap_comments = true
+condense_wildcard_suffixes = true
+match_block_trailing_comma = true
+max_width = 80
+merge_derives = false
+use_small_heuristics = "Max"
+use_try_shorthand = true
