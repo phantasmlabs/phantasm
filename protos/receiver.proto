@@ -1,0 +1,18 @@
+syntax = "proto3";
+package receiver;
+
+import "google/protobuf/empty.proto";
+
+// Receiver service definition.
+//
+// The receiver service is used to receive an approval requests from the
+// client SDK. This requests can then be relayed to the coordinator service
+// to be dispatched to the appropriate approvers.
+service Receiver {
+    // Check if the receiver service is running.
+    rpc Heartbeat(google.protobuf.Empty) returns (HeartbeatResponse) {}
+}
+
+message HeartbeatResponse {
+    string version = 1;
+}

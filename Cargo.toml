@@ -6,3 +6,14 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
 clap = "4.5.20"
+
+# gRPC
+tonic = "0.12.3"
+prost = "0.13.3"
+
+# Tracing
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+
+[build-dependencies]
+tonic-build = "0.12"
