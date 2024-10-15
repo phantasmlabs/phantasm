@@ -3,13 +3,13 @@ mod services;
 mod types;
 
 use clap::{arg, ArgMatches, Command};
+use futures::{SinkExt, StreamExt};
 use protos::receiver_server::ReceiverServer;
 use services::Phantasm;
-use std::error::Error;
-use std::future::Future;
 use std::sync::Arc;
-use std::thread::sleep;
-use std::time::Duration;
+use tokio::net::TcpListener;
+use tokio::sync::mpsc;
+use tokio_tungstenite::accept_async;
 use tonic::transport::Server;
 
 const START_COMMAND: &str = "start";
@@ -51,43 +51,69 @@ fn start_command() -> Command {
 }
 
 async fn start_handler(args: &ArgMatches) {
+    // Unwrapping is safe here because the arguments are validated by Clap.
     let receiver_port = *args.get_one::<u16>("receiver-port").unwrap();
-    let coordinator_port = args.get_one::<u16>("coordinator-port").unwrap();
+    let coordinator_port = *args.get_one::<u16>("coordinator-port").unwrap();
 
+    let service = Arc::new(Phantasm::open().expect("Failed to open Phantasm"));
+
+    let receiver_service = service.clone();
     let receiver_server = tokio::spawn(async move {
-        supervisor(start_receiver_server, receiver_port).await
+        start_receiver_server(receiver_service, receiver_port).await
     });
 
-    let _ = tokio::join!(receiver_server);
+    let coordinator_service = service.clone();
+    let coordinator_server = tokio::spawn(async move {
+        start_coordinator_server(coordinator_service, coordinator_port).await
+    });
+
+    let _ = tokio::join!(receiver_server, coordinator_server);
 }
 
-async fn start_receiver_server(port: u16) -> Result<(), Box<dyn Error>> {
-    let addr = format!("[::]:{port}").parse()?;
-    let service = Arc::new(Phantasm::open()?);
-
+async fn start_receiver_server(service: Arc<Phantasm>, port: u16) {
+    let addr = format!("[::]:{port}").parse().unwrap();
     tracing::info!("Receiver server is ready on port {port}");
 
     Server::builder()
         .add_service(ReceiverServer::new(service))
         .serve(addr)
-        .await?;
-
-    Ok(())
+        .await
+        .expect("Failed to start the receiver server");
 }
 
-async fn supervisor<F, R>(server: F, port: u16)
-where
-    F: Fn(u16) -> R,
-    R: Future<Output = Result<(), Box<dyn Error>>> + 'static,
-{
-    loop {
-        if let Err(e) = server(port).await {
-            tracing::error!("Server Error: {e}");
-            tracing::info!("Restarting Phantasm servers...");
-            sleep(Duration::from_secs(3));
-        } else {
-            tracing::info!("Phantasm servers exited gracefully");
-            break;
-        }
+async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
+    let addr = format!("[::]:{port}");
+    let listener = TcpListener::bind(addr).await.unwrap();
+
+    tracing::info!("Coordinator server is ready on port {port}");
+
+    while let Ok((stream, _)) = listener.accept().await {
+        let connection_addr = stream
+            .peer_addr()
+            .expect("Connected streams should have a peer address");
+
+        tracing::info!("Connection established with {connection_addr}");
+
+        tokio::spawn(async move {
+            let websocket = accept_async(stream).await.unwrap();
+            let (mut writer, mut reader) = websocket.split();
+            let (sender, mut receiver) = mpsc::unbounded_channel();
+
+            tokio::spawn(async move {
+                while let Some(Ok(msg)) = reader.next().await {
+                    println!("Received: {}", msg.to_text().unwrap());
+                }
+            });
+
+            tokio::spawn(async move {
+                while let Some(msg) = receiver.recv().await {
+                    if writer.send(msg).await.is_err() {
+                        break;
+                    }
+                }
+            });
+
+            tracing::info!("Connection closed: {connection_addr}")
+        });
     }
 }

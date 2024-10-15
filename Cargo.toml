@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
+tokio-tungstenite = "0.24.0"
+futures = "0.3.31"
 clap = "4.5.20"
 
 # gRPC
