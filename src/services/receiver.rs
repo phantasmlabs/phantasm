@@ -1,16 +1,8 @@
 use super::*;
-use protos::receiver_server::Receiver as ProtoReceiver;
-
-pub struct Receiver {}
-
-impl Receiver {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
+use protos::receiver_server::Receiver;
 
 #[tonic::async_trait]
-impl ProtoReceiver for Receiver {
+impl Receiver for Arc<Phantasm> {
     async fn heartbeat(
         &self,
         _request: Request<()>,
@@ -20,5 +12,21 @@ impl ProtoReceiver for Receiver {
         };
 
         Ok(Response::new(response))
+    }
+
+    async fn get_approval(
+        &self,
+        request: Request<protos::GetApprovalRequest>,
+    ) -> Result<Response<protos::GetApprovalResponse>, Status> {
+        let request = request.into_inner();
+        let task = ApprovalTask {
+            id: TaskID::new(),
+            name: request.name,
+            parameters: request.parameters,
+        };
+
+        self.insert(&task)?;
+
+        unimplemented!()
     }
 }

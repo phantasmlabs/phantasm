@@ -1,11 +1,13 @@
 mod protos;
 mod services;
+mod types;
 
 use clap::{arg, ArgMatches, Command};
 use protos::receiver_server::ReceiverServer;
-use services::receiver::Receiver;
+use services::Phantasm;
 use std::error::Error;
 use std::future::Future;
+use std::sync::Arc;
 use std::thread::sleep;
 use std::time::Duration;
 use tonic::transport::Server;
@@ -14,6 +16,7 @@ const START_COMMAND: &str = "start";
 
 #[tokio::main]
 async fn main() {
+    dotenv::dotenv().ok();
     tracing_subscriber::fmt::init();
 
     let cli = Command::new(env!("CARGO_PKG_NAME"))
@@ -60,7 +63,7 @@ async fn start_handler(args: &ArgMatches) {
 
 async fn start_receiver_server(port: u16) -> Result<(), Box<dyn Error>> {
     let addr = format!("[::]:{port}").parse()?;
-    let service = Receiver::new();
+    let service = Arc::new(Phantasm::open()?);
 
     tracing::info!("Receiver server is ready on port {port}");
 

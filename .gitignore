@@ -2,3 +2,6 @@
 debug/
 target/
 Cargo.lock
+
+# Phantasm
+phantasm/
