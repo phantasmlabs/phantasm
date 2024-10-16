@@ -1,4 +1,4 @@
-pub mod receiver;
+mod receiver;
 
 // Import common modules below.
 use crate::protos;
@@ -8,33 +8,72 @@ use std::env;
 use std::error::Error;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use tokio::sync::mpsc::UnboundedSender;
+use tokio::sync::oneshot::Sender;
 use tokio_tungstenite::tungstenite::Message;
 use tonic::{Request, Response, Status};
 
 #[derive(Debug)]
 pub struct Phantasm {
-    connections: Mutex<HashMap<ConnectionID, UnboundedSender<Message>>>,
+    connections: Mutex<HashMap<ConnectionID, Connection>>,
+    approvals: Mutex<HashMap<ApprovalID, Sender<bool>>>,
 }
 
 impl Phantasm {
     pub fn open() -> Result<Self, Box<dyn Error>> {
         Self::setup_dir()?;
-        Ok(Phantasm { connections: Mutex::new(HashMap::new()) })
+        Ok(Phantasm {
+            connections: Mutex::new(HashMap::new()),
+            approvals: Mutex::new(HashMap::new()),
+        })
     }
 
-    pub fn add_connection(
-        &self,
-        id: &ConnectionID,
-        sender: &UnboundedSender<Message>,
-    ) {
-        let mut conn = self.connections.lock().unwrap();
-        conn.insert(*id, sender.to_owned());
+    pub fn add_connection(&self, id: ConnectionID, connection: Connection) {
+        let mut connections = self.connections.lock().unwrap();
+        connections.insert(id, connection);
+    }
+
+    pub fn get_connection(&self, id: &ConnectionID) -> Option<Connection> {
+        let connections = self.connections.lock().unwrap();
+        connections.get(id).cloned()
     }
 
     pub fn remove_connection(&self, id: &ConnectionID) {
-        let mut conn = self.connections.lock().unwrap();
-        conn.remove(id);
+        let mut connections = self.connections.lock().unwrap();
+        connections.remove(id);
+    }
+
+    fn get_lightest_connection(&self) -> Option<ConnectionID> {
+        let connections = self.connections.lock().unwrap();
+        connections
+            .iter()
+            .min_by_key(|(_, connection)| connection.load)
+            .map(|(id, _)| *id)
+    }
+
+    fn add_load(&self, id: &ConnectionID) {
+        let mut connections = self.connections.lock().unwrap();
+        if let Some(connection) = connections.get_mut(id) {
+            connection.load += 1;
+        }
+    }
+
+    fn reduce_load(&self, id: &ConnectionID) {
+        let mut connections = self.connections.lock().unwrap();
+        if let Some(connection) = connections.get_mut(id) {
+            if connection.load > 0 {
+                connection.load -= 1;
+            }
+        }
+    }
+
+    fn add_approval(&self, id: ApprovalID, sender: Sender<bool>) {
+        let mut approvals = self.approvals.lock().unwrap();
+        approvals.insert(id, sender);
+    }
+
+    fn remove_approval(&self, id: &ApprovalID) {
+        let mut approvals = self.approvals.lock().unwrap();
+        approvals.remove(id);
     }
 
     fn dir() -> PathBuf {
