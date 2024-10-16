@@ -1,3 +1,5 @@
+#![warn(unused_qualifications)]
+
 mod protos;
 mod services;
 mod types;
@@ -11,7 +13,7 @@ use tokio::net::TcpListener;
 use tokio::sync::mpsc;
 use tokio_tungstenite::accept_async;
 use tonic::transport::Server;
-use types::ConnectionID;
+use types::{Connection, ConnectionID};
 
 const START_COMMAND: &str = "start";
 
@@ -103,7 +105,8 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
             let (sender, mut receiver) = mpsc::unbounded_channel();
 
             let connection_id = ConnectionID::new();
-            service.add_connection(&connection_id, &sender);
+            let connection = Connection::new(sender);
+            service.add_connection(connection_id, connection);
 
             tokio::spawn(async move {
                 while let Some(Ok(_)) = reader.next().await {}

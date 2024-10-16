@@ -1,3 +1,3 @@
 #![allow(clippy::all)]
-#![allow(non_snake_case)]
+#![allow(unused_qualifications)]
 tonic::include_proto!("receiver");
