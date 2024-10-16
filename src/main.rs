@@ -11,6 +11,7 @@ use tokio::net::TcpListener;
 use tokio::sync::mpsc;
 use tokio_tungstenite::accept_async;
 use tonic::transport::Server;
+use types::ConnectionID;
 
 const START_COMMAND: &str = "start";
 
@@ -88,32 +89,35 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
     tracing::info!("Coordinator server is ready on port {port}");
 
     while let Ok((stream, _)) = listener.accept().await {
-        let connection_addr = stream
+        let peer_addr = stream
             .peer_addr()
             .expect("Connected streams should have a peer address");
 
-        tracing::info!("Connection established with {connection_addr}");
+        let peer_ip = peer_addr.ip().to_canonical();
+        tracing::info!("Connection established with {peer_ip}");
 
+        let service = service.clone();
         tokio::spawn(async move {
             let websocket = accept_async(stream).await.unwrap();
             let (mut writer, mut reader) = websocket.split();
             let (sender, mut receiver) = mpsc::unbounded_channel();
 
+            let connection_id = ConnectionID::new();
+            service.add_connection(&connection_id, &sender);
+
             tokio::spawn(async move {
-                while let Some(Ok(msg)) = reader.next().await {
-                    println!("Received: {}", msg.to_text().unwrap());
-                }
+                while let Some(Ok(_)) = reader.next().await {}
+                service.remove_connection(&connection_id);
+                tracing::info!("Connection closed: {peer_ip}");
             });
 
             tokio::spawn(async move {
-                while let Some(msg) = receiver.recv().await {
-                    if writer.send(msg).await.is_err() {
+                while let Some(message) = receiver.recv().await {
+                    if writer.send(message).await.is_err() {
                         break;
                     }
                 }
             });
-
-            tracing::info!("Connection closed: {connection_addr}")
         });
     }
 }

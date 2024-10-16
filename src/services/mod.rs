@@ -3,27 +3,38 @@ pub mod receiver;
 // Import common modules below.
 use crate::protos;
 use crate::types::*;
-use std::collections::VecDeque;
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
+use tokio::sync::mpsc::UnboundedSender;
+use tokio_tungstenite::tungstenite::Message;
 use tonic::{Request, Response, Status};
 
+#[derive(Debug)]
 pub struct Phantasm {
-    approvals: Mutex<VecDeque<ApprovalTask>>,
+    connections: Mutex<HashMap<ConnectionID, UnboundedSender<Message>>>,
 }
 
 impl Phantasm {
     pub fn open() -> Result<Self, Box<dyn Error>> {
         Self::setup_dir()?;
-        Ok(Phantasm { approvals: Mutex::new(VecDeque::new()) })
+        Ok(Phantasm { connections: Mutex::new(HashMap::new()) })
     }
 
-    fn insert(&self, task: &ApprovalTask) -> Result<(), Status> {
-        let mut approvals = self.approvals.lock().unwrap();
-        approvals.push_back(task.to_owned());
-        Ok(())
+    pub fn add_connection(
+        &self,
+        id: &ConnectionID,
+        sender: &UnboundedSender<Message>,
+    ) {
+        let mut conn = self.connections.lock().unwrap();
+        conn.insert(*id, sender.to_owned());
+    }
+
+    pub fn remove_connection(&self, id: &ConnectionID) {
+        let mut conn = self.connections.lock().unwrap();
+        conn.remove(id);
     }
 
     fn dir() -> PathBuf {

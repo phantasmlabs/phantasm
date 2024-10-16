@@ -18,15 +18,6 @@ impl Receiver for Arc<Phantasm> {
         &self,
         request: Request<protos::GetApprovalRequest>,
     ) -> Result<Response<protos::GetApprovalResponse>, Status> {
-        let request = request.into_inner();
-        let task = ApprovalTask {
-            id: TaskID::new(),
-            name: request.name,
-            parameters: request.parameters,
-        };
-
-        self.insert(&task)?;
-
         unimplemented!()
     }
 }
