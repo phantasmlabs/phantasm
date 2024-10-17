@@ -27,19 +27,38 @@ impl Phantasm {
         })
     }
 
+    pub async fn receive_message(&self, message: &Message) {
+        let message = match message {
+            Message::Text(text) => text,
+            _ => return,
+        };
+
+        let message: ApprovalResponse = match serde_json::from_str(message) {
+            Ok(message) => message,
+            Err(_) => return,
+        };
+
+        // Relay the approval response to the oneshot sender to complete
+        // the approval request.
+        let approval_id = message.id;
+        if let Some(sender) = self.remove_approval(&approval_id) {
+            let _ = sender.send(message);
+        }
+    }
+
     pub fn add_connection(&self, id: ConnectionID, connection: Connection) {
         let mut connections = self.connections.lock().unwrap();
         connections.insert(id, connection);
     }
 
-    pub fn get_connection(&self, id: &ConnectionID) -> Option<Connection> {
-        let connections = self.connections.lock().unwrap();
-        connections.get(id).cloned()
-    }
-
     pub fn remove_connection(&self, id: &ConnectionID) {
         let mut connections = self.connections.lock().unwrap();
         connections.remove(id);
+    }
+
+    fn get_connection(&self, id: &ConnectionID) -> Option<Connection> {
+        let connections = self.connections.lock().unwrap();
+        connections.get(id).cloned()
     }
 
     fn get_lightest_connection(&self) -> Option<ConnectionID> {
@@ -66,40 +85,17 @@ impl Phantasm {
         }
     }
 
-    pub fn add_approval(
-        &self,
-        id: ApprovalID,
-        sender: Sender<ApprovalResponse>,
-    ) {
+    fn add_approval(&self, id: ApprovalID, sender: Sender<ApprovalResponse>) {
         let mut approvals = self.approvals.lock().unwrap();
         approvals.insert(id, sender);
     }
 
-    pub fn remove_approval(
+    fn remove_approval(
         &self,
         id: &ApprovalID,
     ) -> Option<Sender<ApprovalResponse>> {
         let mut approvals = self.approvals.lock().unwrap();
         approvals.remove(id)
-    }
-
-    pub async fn receive_message(&self, message: &Message) {
-        let message = match message {
-            Message::Text(text) => text,
-            _ => return,
-        };
-
-        let message: ApprovalResponse = match serde_json::from_str(message) {
-            Ok(message) => message,
-            Err(_) => return,
-        };
-
-        // Relay the approval response to the oneshot sender to complete
-        // the approval request.
-        let approval_id = message.id;
-        if let Some(sender) = self.remove_approval(&approval_id) {
-            let _ = sender.send(message);
-        }
     }
 
     fn dir() -> PathBuf {
