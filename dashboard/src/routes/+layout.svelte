@@ -5,9 +5,3 @@
 </script>
 
 <slot />
-
-<style>
-  :global(body) {
-    font-family: "Cabin", sans-serif;
-  }
-</style>

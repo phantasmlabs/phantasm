@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+    @apply scroll-smooth leading-normal tracking-normal;
+    font-family: "Cabin", sans-serif;
+  }
+}
