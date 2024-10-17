@@ -109,7 +109,10 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
             service.add_connection(connection_id, connection);
 
             tokio::spawn(async move {
-                while let Some(Ok(_)) = reader.next().await {}
+                while let Some(Ok(message)) = reader.next().await {
+                    service.receive_message(&message).await
+                }
+
                 service.remove_connection(&connection_id);
                 tracing::info!("Connection closed: {peer_ip}");
             });

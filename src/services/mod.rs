@@ -15,7 +15,7 @@ use tonic::{Request, Response, Status};
 #[derive(Debug)]
 pub struct Phantasm {
     connections: Mutex<HashMap<ConnectionID, Connection>>,
-    approvals: Mutex<HashMap<ApprovalID, Sender<bool>>>,
+    approvals: Mutex<HashMap<ApprovalID, Sender<ApprovalResponse>>>,
 }
 
 impl Phantasm {
@@ -66,14 +66,40 @@ impl Phantasm {
         }
     }
 
-    fn add_approval(&self, id: ApprovalID, sender: Sender<bool>) {
+    pub fn add_approval(
+        &self,
+        id: ApprovalID,
+        sender: Sender<ApprovalResponse>,
+    ) {
         let mut approvals = self.approvals.lock().unwrap();
         approvals.insert(id, sender);
     }
 
-    fn remove_approval(&self, id: &ApprovalID) {
+    pub fn remove_approval(
+        &self,
+        id: &ApprovalID,
+    ) -> Option<Sender<ApprovalResponse>> {
         let mut approvals = self.approvals.lock().unwrap();
-        approvals.remove(id);
+        approvals.remove(id)
+    }
+
+    pub async fn receive_message(&self, message: &Message) {
+        let message = match message {
+            Message::Text(text) => text,
+            _ => return,
+        };
+
+        let message: ApprovalResponse = match serde_json::from_str(message) {
+            Ok(message) => message,
+            Err(_) => return,
+        };
+
+        // Relay the approval response to the oneshot sender to complete
+        // the approval request.
+        let approval_id = message.id;
+        if let Some(sender) = self.remove_approval(&approval_id) {
+            let _ = sender.send(message);
+        }
     }
 
     fn dir() -> PathBuf {

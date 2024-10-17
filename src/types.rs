@@ -1,3 +1,5 @@
+use crate::protos;
+use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc::UnboundedSender;
 use tokio_tungstenite::tungstenite::Message;
 use uuid::Uuid;
@@ -24,10 +26,42 @@ impl Connection {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize)]
 pub struct ApprovalID(Uuid);
 
 impl ApprovalID {
     pub fn new() -> Self {
         Self(Uuid::new_v4())
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApprovalRequest {
+    pub id: ApprovalID,
+    pub name: String,
+    pub parameters: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApprovalResponse {
+    pub id: ApprovalID,
+    pub status: ApprovalStatus,
+    pub parameters: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ApprovalStatus {
+    Approved,
+    Modified,
+    Denied,
+}
+
+impl From<ApprovalStatus> for protos::ApprovalStatus {
+    fn from(status: ApprovalStatus) -> Self {
+        match status {
+            ApprovalStatus::Approved => Self::Approved,
+            ApprovalStatus::Modified => Self::Modified,
+            ApprovalStatus::Denied => Self::Denied,
+        }
     }
 }
