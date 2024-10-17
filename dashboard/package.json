@@ -10,6 +10,10 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write ."
   },
+  "dependencies": {
+    "@fontsource/cabin": "^5.1.0",
+    "@fontsource/inconsolata": "^5.1.0"
+  },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
