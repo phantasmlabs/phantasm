@@ -5,3 +5,23 @@ Cargo.lock
 
 # Phantasm
 phantasm/
+
+# Node
+node_modules
+build
+.svelte-kit
+.output
+.vercel
+
+# OS
+.ds_store
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
