@@ -7,5 +7,28 @@
     @apply bg-white text-gray-900;
     @apply scroll-smooth leading-normal tracking-normal;
     font-family: "Cabin", sans-serif;
+    font-size: 16px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-bold;
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  small {
+    @apply text-sm text-gray-500;
   }
 }
