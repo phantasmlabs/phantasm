@@ -1,9 +1,10 @@
 <script lang="ts">
   export let icon
   export let text: string
+  export let action: () => void = () => {}
 </script>
 
-<button class="button">
+<button class="button" on:click={action}>
   <span><svelte:component this={icon} size={32} /></span>
   <span>{text}</span>
 </button>

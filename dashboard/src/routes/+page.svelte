@@ -5,20 +5,23 @@
   import Title from "$lib/components/utils/title.svelte"
   import Button from "$lib/components/buttons/with-icon.svelte"
   import ConnectionCard from "$lib/components/cards/connection.svelte"
+  import BasicModal from "$lib/components/modals/basic.svelte"
   import { Add } from "carbon-icons-svelte"
 
   let connections: Connection[] = []
-  let stored_connections: string | null
+  let storedConnections: string | null
+  let showAddConnectionModal = false
 
   if (browser) {
-    stored_connections = window.localStorage.getItem("connections")
-    if (stored_connections) {
-      connections = JSON.parse(stored_connections)
+    storedConnections = window.localStorage.getItem("connections")
+    if (storedConnections) {
+      connections = JSON.parse(storedConnections)
     }
   }
 </script>
 
 <Title title="Connections" />
+<BasicModal bind:show={showAddConnectionModal}></BasicModal>
 
 <div class="max-w-screen-sm mx-auto px-6">
   <div class="py-24 space-y-12">
@@ -41,8 +44,13 @@
       </div>
     {/if}
     <div class="flex flex-col space-y-3 items-center text-center">
-      <Button text="Add Connection" icon={Add} />
-      <small>Connection details are stored locally!</small>
+      <Button
+        text="Add Connection"
+        icon={Add}
+        action={() => {
+          showAddConnectionModal = true
+        }}
+      />
     </div>
   </div>
 </div>

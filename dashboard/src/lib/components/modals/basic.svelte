@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fly, fade } from "svelte/transition"
   export let show: boolean = true
 </script>
 
@@ -7,11 +8,12 @@
     <div
       class="backdrop"
       role="none"
+      transition:fade={{ duration: 50 }}
       on:click={() => {
         show = false
       }}
     />
-    <div class="modal">
+    <div class="modal" transition:fly={{ y: 128 }}>
       <slot />
     </div>
   </div>
@@ -25,7 +27,7 @@
 
   .backdrop {
     @apply fixed top-0 left-0 w-full h-full;
-    @apply bg-black bg-opacity-50;
+    @apply bg-black bg-opacity-50 cursor-pointer;
   }
 
   .modal {
