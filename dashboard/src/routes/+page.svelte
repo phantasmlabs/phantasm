@@ -6,11 +6,15 @@
   import Button from "$lib/components/buttons/with-icon.svelte"
   import ConnectionCard from "$lib/components/cards/connection.svelte"
   import BasicModal from "$lib/components/modals/basic.svelte"
+  import InputField from "$lib/components/inputs/field.svelte"
   import { Add } from "carbon-icons-svelte"
 
   let connections: Connection[] = []
   let storedConnections: string | null
   let showAddConnectionModal = false
+
+  let connectionName = ""
+  let connectionAddress = ""
 
   if (browser) {
     storedConnections = window.localStorage.getItem("connections")
@@ -21,7 +25,26 @@
 </script>
 
 <Title title="Connections" />
-<BasicModal bind:show={showAddConnectionModal}></BasicModal>
+
+<BasicModal bind:show={showAddConnectionModal}>
+  <div class="flex flex-col space-y-6">
+    <h3>Add Connection</h3>
+    <div class="flex flex-col space-y-4">
+      <InputField
+        id="connection-name"
+        label="Name"
+        placeholder="ChatGPT"
+        bind:value={connectionName}
+      />
+      <InputField
+        id="connection-address"
+        label="Address"
+        placeholder="25.5.200.0:2505"
+        bind:value={connectionAddress}
+      />
+    </div>
+  </div>
+</BasicModal>
 
 <div class="max-w-screen-sm mx-auto px-6">
   <div class="py-24 space-y-12">
