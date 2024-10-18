@@ -13,9 +13,10 @@
     @apply flex items-center justify-center;
     @apply space-x-2 w-full py-3 px-6;
     @apply bg-blue-700 text-white rounded;
+    @apply transition duration-300 ease-in-out;
   }
 
   .button:hover {
-    @apply brightness-90;
+    @apply bg-blue-800;
   }
 </style>
