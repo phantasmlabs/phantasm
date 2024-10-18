@@ -31,4 +31,8 @@
   small {
     @apply text-sm text-gray-500;
   }
+
+  code {
+    font-family: "Inconsolata", monospace;
+  }
 }

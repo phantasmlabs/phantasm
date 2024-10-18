@@ -1,10 +1,21 @@
-<script>
+<script lang="ts">
+  import { browser } from "$app/environment"
+  import type { Connection } from "$lib/types.ts"
   import Wordmark from "$lib/components/utils/wordmark.svelte"
   import Title from "$lib/components/utils/title.svelte"
   import Button from "$lib/components/buttons/with-icon.svelte"
-  import Add from "carbon-icons-svelte/lib/Add.svelte"
+  import ConnectionCard from "$lib/components/cards/connection.svelte"
+  import { Add } from "carbon-icons-svelte"
 
-  let connections = []
+  let connections: Connection[] = []
+  let stored_connections: string | null
+
+  if (browser) {
+    stored_connections = window.localStorage.getItem("connections")
+    if (stored_connections) {
+      connections = JSON.parse(stored_connections)
+    }
+  }
 </script>
 
 <Title title="Connections" />
@@ -23,7 +34,11 @@
         </p>
       </div>
     {:else}
-      <div></div>
+      <div class="flex flex-col space-y-3">
+        {#each connections as conn}
+          <ConnectionCard connection={conn} />
+        {/each}
+      </div>
     {/if}
     <div class="flex flex-col space-y-3 items-center text-center">
       <Button text="Add Connection" icon={Add} />
