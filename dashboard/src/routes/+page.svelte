@@ -3,7 +3,8 @@
   import type { Connection } from "$lib/types.ts"
   import Wordmark from "$lib/components/utils/wordmark.svelte"
   import Title from "$lib/components/utils/title.svelte"
-  import Button from "$lib/components/buttons/with-icon.svelte"
+  import ActionButton from "$lib/components/buttons/action.svelte"
+  import BasicButton from "$lib/components/buttons/basic.svelte"
   import ConnectionCard from "$lib/components/cards/connection.svelte"
   import BasicModal from "$lib/components/modals/basic.svelte"
   import InputField from "$lib/components/inputs/field.svelte"
@@ -22,6 +23,8 @@
       connections = JSON.parse(storedConnections)
     }
   }
+
+  function connect() {}
 </script>
 
 <Title title="Connections" />
@@ -29,7 +32,7 @@
 <BasicModal bind:show={showAddConnectionModal}>
   <div class="flex flex-col space-y-6">
     <h3>Add Connection</h3>
-    <div class="flex flex-col space-y-4">
+    <div class="flex flex-col space-y-3">
       <InputField
         id="connection-name"
         label="Name"
@@ -41,6 +44,16 @@
         label="Address"
         placeholder="25.5.200.0:2505"
         bind:value={connectionAddress}
+      />
+    </div>
+    <div class="flex flex-col space-y-3 items-center">
+      <BasicButton text="Connect" action={connect} />
+      <BasicButton
+        text="Cancel"
+        theme="secondary"
+        action={() => {
+          showAddConnectionModal = false
+        }}
       />
     </div>
   </div>
@@ -66,14 +79,12 @@
         {/each}
       </div>
     {/if}
-    <div class="flex flex-col space-y-3 items-center text-center">
-      <Button
-        text="Add Connection"
-        icon={Add}
-        action={() => {
-          showAddConnectionModal = true
-        }}
-      />
-    </div>
+    <ActionButton
+      text="Add Connection"
+      icon={Add}
+      action={() => {
+        showAddConnectionModal = true
+      }}
+    />
   </div>
 </div>
