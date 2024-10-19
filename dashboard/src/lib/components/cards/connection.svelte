@@ -5,6 +5,7 @@
   const iconSize = 16
 
   export let connection: Connection
+  export let connect: () => void
   export let deleteConnection: () => void
 </script>
 
@@ -14,7 +15,7 @@
     <small><code>{connection.address}</code></small>
   </div>
   <div class=" flex-none space-x-2 hidden group-hover:flex">
-    <button class="card-button primary space-x-1">
+    <button class="card-button primary space-x-1" on:click={connect}>
       <Link size={iconSize} />
       <span class="text-xs">Connect</span>
     </button>

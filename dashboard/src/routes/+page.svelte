@@ -14,21 +14,28 @@
   let connectionName = ""
   let connectionAddress = ""
 
-  function addConnection() {
-    if (connectionName && connectionAddress) {
-      connections.update((conn) => {
-        conn.push({
-          id: crypto.randomUUID(),
-          name: connectionName,
-          address: connectionAddress
-        })
+  $: if (!showAddConnectionModal) {
+    connectionName = ""
+    connectionAddress = ""
+  }
 
-        return conn
-      })
-
-      window.localStorage.setItem("connections", JSON.stringify($connections))
-      showAddConnectionModal = false
+  function addConnection(name: string, address: string) {
+    if (!name || !address) {
+      return
     }
+
+    let new_connection = {
+      id: crypto.randomUUID(),
+      name: name,
+      address: address
+    }
+
+    connections.update((conn) => {
+      conn.push(new_connection)
+      return conn
+    })
+
+    window.localStorage.setItem("connections", JSON.stringify($connections))
   }
 
   function deleteConnection(id: string) {
@@ -37,6 +44,10 @@
     })
 
     window.localStorage.setItem("connections", JSON.stringify($connections))
+  }
+
+  function connect(addr: string) {
+    console.log(`Connecting to ${addr}`)
   }
 </script>
 
@@ -63,7 +74,11 @@
       <BasicButton
         text="Connect"
         action={() => {
-          addConnection()
+          if (connectionName && connectionAddress) {
+            connect(connectionAddress)
+            addConnection(connectionName, connectionAddress)
+            showAddConnectionModal = false
+          }
         }}
       />
       <BasicButton
@@ -96,6 +111,9 @@
           <div animate:flip={{ duration: 200 }}>
             <ConnectionCard
               connection={conn}
+              connect={() => {
+                connect(conn.address)
+              }}
               deleteConnection={() => {
                 deleteConnection(conn.id)
               }}
