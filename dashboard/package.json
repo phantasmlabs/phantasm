@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@fontsource/cabin": "^5.1.0",
-    "@fontsource/inconsolata": "^5.1.0"
+    "@fontsource/inconsolata": "^5.1.0",
+    "carbon-icons-svelte": "^12.12.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",

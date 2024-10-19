@@ -9,6 +9,7 @@
   import BasicModal from "$lib/components/modals/basic.svelte"
   import InputField from "$lib/components/inputs/field.svelte"
   import Add from "carbon-icons-svelte/lib/Add.svelte"
+  import { goto } from "$app/navigation"
 
   let showAddConnectionModal = false
   let connectionName = ""
@@ -36,6 +37,7 @@
     })
 
     window.localStorage.setItem("connections", JSON.stringify($connections))
+    connect(new_connection.id)
   }
 
   function deleteConnection(id: string) {
@@ -46,8 +48,8 @@
     window.localStorage.setItem("connections", JSON.stringify($connections))
   }
 
-  function connect(addr: string) {
-    console.log(`Connecting to ${addr}`)
+  function connect(id: string) {
+    goto(`/connections/${id}`)
   }
 </script>
 
@@ -75,7 +77,6 @@
         text="Connect"
         action={() => {
           if (connectionName && connectionAddress) {
-            connect(connectionAddress)
             addConnection(connectionName, connectionAddress)
             showAddConnectionModal = false
           }
@@ -112,7 +113,7 @@
             <ConnectionCard
               connection={conn}
               connect={() => {
-                connect(conn.address)
+                connect(conn.id)
               }}
               deleteConnection={() => {
                 deleteConnection(conn.id)
