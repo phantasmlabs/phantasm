@@ -5,7 +5,7 @@
 </script>
 
 <button class="button" on:click={action}>
-  <span><svelte:component this={icon} size={32} /></span>
+  <span><svelte:component this={icon} size={24} /></span>
   <span>{text}</span>
 </button>
 
