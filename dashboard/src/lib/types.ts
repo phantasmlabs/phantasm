@@ -3,3 +3,9 @@ export type Connection = {
   name: string
   address: string
 }
+
+export type Alert = {
+  id: string
+  type: "success" | "error"
+  message: string
+}

@@ -8,6 +8,7 @@ use clap::{arg, ArgMatches, Command};
 use futures::{SinkExt, StreamExt};
 use protos::receiver_server::ReceiverServer;
 use services::Phantasm;
+use std::net::{IpAddr, Ipv4Addr};
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tokio::sync::mpsc;
@@ -95,7 +96,11 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
             .peer_addr()
             .expect("Connected streams should have a peer address");
 
-        let peer_ip = peer_addr.ip().to_canonical();
+        let mut peer_ip = peer_addr.ip().to_canonical();
+        if peer_ip.is_loopback() {
+            peer_ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
+        }
+
         tracing::info!("Connection established with {peer_ip}");
 
         let service = service.clone();
