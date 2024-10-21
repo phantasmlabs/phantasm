@@ -56,6 +56,16 @@ pub enum ApprovalStatus {
     Denied,
 }
 
+impl From<&str> for ApprovalStatus {
+    fn from(status: &str) -> Self {
+        match status.to_lowercase().as_str() {
+            "approved" => Self::Approved,
+            "modifed" => Self::Modified,
+            _ => Self::Denied,
+        }
+    }
+}
+
 impl From<ApprovalStatus> for protos::ApprovalStatus {
     fn from(status: ApprovalStatus) -> Self {
         match status {
