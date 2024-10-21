@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.cm-editor.cm-focused {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.cm-editor.cm-content {
+  font-family: "Inconsolata", monospace;
+}
+
 @layer base {
   body {
     @apply bg-white text-gray-900;

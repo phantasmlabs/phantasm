@@ -11,6 +11,10 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@codemirror/commands": "^6.7.1",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.34.1",
     "@fontsource/cabin": "^5.1.0",
     "@fontsource/inconsolata": "^5.1.0",
     "carbon-icons-svelte": "^12.12.0"

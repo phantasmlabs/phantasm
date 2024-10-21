@@ -2,6 +2,8 @@
   import "../app.css"
   import "@fontsource/cabin/400.css"
   import "@fontsource/cabin/700.css"
+  import "@fontsource/inconsolata/400.css"
+  import "@fontsource/inconsolata/700.css"
 
   import { flip } from "svelte/animate"
   import { onMount } from "svelte"
