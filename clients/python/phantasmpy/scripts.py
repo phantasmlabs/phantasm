@@ -5,7 +5,7 @@ def generate_grpc_stubs():
     proto_dir = os.path.abspath((os.path.join("..", "..", "protos")))
     proto_file = os.path.join(proto_dir, "receiver.proto")
 
-    generated_dir = os.path.abspath(os.path.join("gen"))
+    generated_dir = os.path.abspath(os.path.join("stubs"))
     os.makedirs(generated_dir, exist_ok=True)
 
     os.system(
