@@ -35,7 +35,10 @@ impl Phantasm {
 
         let message: ApprovalResponse = match serde_json::from_str(message) {
             Ok(message) => message,
-            Err(_) => return,
+            Err(error) => {
+                tracing::error!("Failed to parse the message: {error}");
+                return;
+            },
         };
 
         // Relay the approval response to the oneshot sender to complete
