@@ -17,4 +17,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-generate_grpc_stubs = "phantasmpy.scripts:generate_grpc_stubs"
+generate_grpc_stubs = "scripts:generate_grpc_stubs"
