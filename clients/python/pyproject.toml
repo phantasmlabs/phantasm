@@ -7,10 +7,9 @@ readme = "../../README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+black = "^24.10.0"
 grpcio = "^1.67.0"
 grpcio-tools = "^1.67.0"
-protobuf = "^5.28.2"
-black = "^24.10.0"
 
 [build-system]
 requires = ["poetry-core"]
