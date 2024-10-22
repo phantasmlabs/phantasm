@@ -30,8 +30,9 @@ impl Receiver for Arc<Phantasm> {
         // Unwrap is safe because the connection ID is guaranteed to exist.
         let connection = self.get_connection(&connection_id).unwrap();
 
-        let approval_id = ApprovalID::new();
         let request = request.into_inner();
+        let approval_id = ApprovalID::new();
+        tracing::info!("Approval request is created: {approval_id}");
 
         // Create a oneshot channel to coordinate the approval request
         // and response with the approver.
@@ -58,6 +59,7 @@ impl Receiver for Arc<Phantasm> {
             Status::internal("Failed to receive approval response")
         })?;
 
+        tracing::info!("Approval request {approval_id}: {:?}", result.status);
         self.reduce_load(&connection_id);
 
         let response = protos::GetApprovalResponse {
