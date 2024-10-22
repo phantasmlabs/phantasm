@@ -15,5 +15,9 @@ grpcio-tools = "^1.67.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 80
+
 [tool.poetry.scripts]
 generate_grpc_stubs = "scripts:generate_grpc_stubs"
+emulate_get_approval = "phantasmpy.client:emulate_get_approval"
