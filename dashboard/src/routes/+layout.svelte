@@ -22,9 +22,7 @@
   })
 
   function removeAlert(id: string) {
-    alerts.update((alerts) => {
-      return alerts.filter((alert) => alert.id !== id)
-    })
+    alerts.update((alerts) => alerts.filter((alert) => alert.id !== id))
   }
 </script>
 

@@ -2,7 +2,7 @@
   import type { PageData } from "./$types"
   import type { Connection, Alert, ApprovalRequest } from "$lib/types"
   import { flip } from "svelte/animate"
-  import { onMount } from "svelte"
+  import { onMount, setContext } from "svelte"
   import { connections, alerts } from "$lib/store"
   import { goto } from "$app/navigation"
   import Title from "$lib/components/utils/title.svelte"
@@ -13,11 +13,17 @@
 
   let connected = true
   let connection: Connection
-  let ws: WebSocket
   let requests: ApprovalRequest[] = []
+
+  let ws: WebSocket
+  $: if (ws) setContext("ws", ws)
 
   function returnHome() {
     goto("/")
+  }
+
+  function removeRequest(id: string) {
+    requests = requests.filter((req) => req.id !== id)
   }
 
   onMount(() => {
@@ -42,6 +48,7 @@
     ws = new WebSocket(`ws://${connection.address}`)
 
     ws.onopen = () => {
+      connected = true
       alerts.update((alerts) => {
         let newAlert: Alert = {
           id: crypto.randomUUID(),
@@ -52,13 +59,11 @@
         alerts.push(newAlert)
         return alerts
       })
-
-      connected = true
     }
 
     ws.onmessage = (event) => {
       const message = event.data
-      console.log(message)
+      requests = [...requests, JSON.parse(message)]
     }
 
     ws.onerror = (error) => {
@@ -101,7 +106,10 @@
         <div class="flex flex-col space-y-3">
           {#each requests as request (request.id)}
             <div animate:flip={{ duration: 200 }}>
-              <ApprovalCard {request} />
+              <ApprovalCard
+                {request}
+                remove={() => removeRequest(request.id)}
+              />
             </div>
           {/each}
         </div>

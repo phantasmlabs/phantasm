@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, getContext } from "svelte"
   import type { ApprovalRequest } from "$lib/types"
   import { EditorView, keymap, highlightActiveLine } from "@codemirror/view"
   import { EditorState } from "@codemirror/state"
@@ -10,8 +10,10 @@
   const iconSize = 16
 
   export let request: ApprovalRequest
+  export let remove: () => void
 
   let editor: Element
+  let ws: WebSocket = getContext("ws")
   let showParameters: boolean = false
 
   let modified = false
@@ -53,6 +55,29 @@
 
     return () => view.destroy()
   })
+
+  function approve() {
+    if (error) return
+
+    let status = modified ? "Modified" : "Approved"
+    let response = { id: request.id, status: status, parameters: "" }
+
+    if (status === "Modified") {
+      // This ensures that the parameters are always valid and formatted
+      // before sending them back to the server.
+      let _params = JSON.parse(parameters)
+      response.parameters = JSON.stringify(_params)
+    }
+
+    ws.send(JSON.stringify(response))
+    remove()
+  }
+
+  function deny() {
+    let response = { id: request.id, status: "Denied", parameters: "" }
+    ws.send(JSON.stringify(response))
+    remove()
+  }
 </script>
 
 <small class="text-xs text-gray-300">{request.id}</small>
@@ -60,18 +85,17 @@
 <div class="group card space-x-4">
   <div class="w-full font-mono font-bold truncate">{request.name}</div>
   <div class="flex flex-none space-x-1">
-    <button class="card-button green space-x-1">
+    <button class="card-button green space-x-1" on:click={approve}>
       <Checkmark size={iconSize} />
       <span>Approve</span>
     </button>
-    <button class="card-button red">
+    <button class="card-button red" on:click={deny}>
       <CloseLarge size={iconSize} />
     </button>
     <button
       class="card-button blue"
       on:click={() => {
         showParameters = !showParameters
-        console.log(showParameters)
       }}
     >
       <PartitionSame size={iconSize} />
