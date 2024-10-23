@@ -24,6 +24,7 @@
 
   function removeRequest(id: string) {
     requests = requests.filter((req) => req.id !== id)
+    window.localStorage.setItem(connection.id, JSON.stringify(requests))
   }
 
   onMount(() => {
@@ -47,6 +48,11 @@
     connection = conn
     ws = new WebSocket(`ws://${connection.address}`)
 
+    let storedRequests = window.localStorage.getItem(connection.id)
+    if (storedRequests) {
+      requests = JSON.parse(storedRequests)
+    }
+
     ws.onopen = () => {
       connected = true
       alerts.update((alerts) => {
@@ -64,6 +70,7 @@
     ws.onmessage = (event) => {
       const message = event.data
       requests = [...requests, JSON.parse(message)]
+      window.localStorage.setItem(connection.id, JSON.stringify(requests))
     }
 
     ws.onerror = (error) => {
