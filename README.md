@@ -1,7 +1,5 @@
 ![Phantasm](https://phantasm-assets.s3.amazonaws.com/banners/0.1.0.png)
 
-# Phantasm
-
 Phantasm offers open-source toolkits that allows you to create human-in-the-loop
 (HITL) workflows for modern AI agents. Phantasm comes with 3 main components
 that work together to create a seamless HITL experience:
@@ -9,6 +7,14 @@ that work together to create a seamless HITL experience:
 - **Server**: Coordinating the HITL workflows between humans and AI agents.
 - **Dashboard**: For the human team to monitor and manage the workflows.
 - **Client**: A library to integrate the workflows into your AI agents.
+
+## Contributing
+
+The easiest way to contribute to Phantasm is by starring the repository and
+sharing it with your colleagues. By doing so, you help us reach a wider audience
+and grow the community. If you are interested in contributing to the project in
+the form of code, design, or documentation, please read our
+[Contributing Guidelines](.github/CONTRIBUTING.md).
 
 ## Disclaimer
 
