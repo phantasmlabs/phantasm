@@ -7,7 +7,7 @@ development ecosystems. Therefore, we welcome contributions from all skill
 levels and backgrounds. We believe that a diverse community leads to a better
 product.
 
-## Tech Stack
+## Technologies
 
 These are some of the primary technologies used to build Phantasm:
 
