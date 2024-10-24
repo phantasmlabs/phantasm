@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phantasmpy"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
 description = "A Python client to interact with Phantasm's receiver server."
 authors = ["Edwin Kys"]
 readme = "../../README.md"
