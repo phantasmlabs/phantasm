@@ -11,7 +11,7 @@ product.
 
 Phantasm consists of three main components: Server, Dashboard, and Client. The
 Dashboard and Client components are located in the _dashboard_ and _clients_
-directories, respectively while the Server component is located in the _src_
+directories, respectively, while the Server component is located in the _src_
 directory.
 
 Before you get started with contributing, you might need to set up your local
