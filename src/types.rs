@@ -42,6 +42,11 @@ impl fmt::Display for ApprovalID {
     }
 }
 
+// The types below are used in dashboard-coordinator communication.
+// They are serialized into JSON strings before being sent as WebSocket
+// messages. If you change these types, make sure to update the types in
+// the dashboard as well.
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ApprovalRequest {
     pub id: ApprovalID,

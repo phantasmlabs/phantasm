@@ -3,6 +3,9 @@ package receiver;
 
 import "google/protobuf/empty.proto";
 
+// NOTE: If you update this file, you must also update the corresponding
+// client libraries in the clients directory.
+
 // Receiver service definition.
 //
 // The receiver service is used to receive an approval requests from the
@@ -15,6 +18,10 @@ service Receiver {
     // Create a new approval request for the approvers to review.
     rpc GetApproval(GetApprovalRequest) returns (GetApprovalResponse) {}
 }
+
+// Below are the messages used in the client-reciever communication.
+// These types are often translated into the language-specific types. If you
+// change these, you may need to update these translated types in the clients.
 
 message HeartbeatResponse {
     string version = 1;
