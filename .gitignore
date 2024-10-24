@@ -28,5 +28,3 @@ vite.config.ts.timestamp-*
 
 # Python
 __pycache__/
-*pb2.py
-*pb2_grpc.py
