@@ -18,6 +18,6 @@ export type ApprovalRequest = {
 
 export type ApprovalResponse = {
   id: string
-  status: "Approved" | "Modified" | "Denied"
+  approved: boolean
   parameters: string
 }

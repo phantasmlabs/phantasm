@@ -1,10 +1,10 @@
+// NOTE: If you update this file, you must also update the corresponding
+// client libraries in the clients directory.
+
 syntax = "proto3";
 package receiver;
 
 import "google/protobuf/empty.proto";
-
-// NOTE: If you update this file, you must also update the corresponding
-// client libraries in the clients directory.
 
 // Receiver service definition.
 //
@@ -33,12 +33,6 @@ message GetApprovalRequest {
 }
 
 message GetApprovalResponse {
-    ApprovalStatus status = 1;
+    bool approved = 1;
     string parameters = 2;
-}
-
-enum ApprovalStatus {
-    APPROVED = 0;
-    MODIFIED = 1;
-    DENIED = 2;
 }

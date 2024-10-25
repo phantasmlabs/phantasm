@@ -16,26 +16,20 @@ class GetApprovalResponse:
     """Response returned by the get approval method.
 
     Properties:
-    - status: Status of the approval request.
+    - approved: True if the operation is approved, False otherwise.
     - parameters: Parameters to be used in the operation.
-
-    Status can be one of: APPROVED, MODIFIED, or DENIED
-
-    If the status is MODIFIED, the parameters will be returned as a Python
-    type depending on the modification made by the approver. Otherwise, the
-    parameters will be None.
     """
 
-    status: str
+    approved: bool
     parameters: Any
 
-    def __init__(self, status: str, parameters: str):
-        self.status = status
+    def __init__(self, approved: bool, parameters: str):
+        self.approved = approved
         self.parameters = json.loads(parameters) if parameters else None
 
     def __str__(self):
         displays = [
-            f"status: {self.status}",
+            f"approved: {self.approved}",
             f"parameters: {self.parameters}",
         ]
 

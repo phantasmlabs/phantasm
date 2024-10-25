@@ -1,4 +1,3 @@
-use crate::protos;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use tokio::sync::mpsc::UnboundedSender;
@@ -57,33 +56,6 @@ pub struct ApprovalRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ApprovalResponse {
     pub id: ApprovalID,
-    pub status: ApprovalStatus,
+    pub approved: bool,
     pub parameters: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum ApprovalStatus {
-    Approved,
-    Modified,
-    Denied,
-}
-
-impl From<&str> for ApprovalStatus {
-    fn from(status: &str) -> Self {
-        match status.to_lowercase().as_str() {
-            "approved" => Self::Approved,
-            "modifed" => Self::Modified,
-            _ => Self::Denied,
-        }
-    }
-}
-
-impl From<ApprovalStatus> for protos::ApprovalStatus {
-    fn from(status: ApprovalStatus) -> Self {
-        match status {
-            ApprovalStatus::Approved => Self::Approved,
-            ApprovalStatus::Modified => Self::Modified,
-            ApprovalStatus::Denied => Self::Denied,
-        }
-    }
 }

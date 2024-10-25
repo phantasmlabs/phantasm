@@ -59,11 +59,16 @@ impl Receiver for Arc<Phantasm> {
             Status::internal("Failed to receive approval response")
         })?;
 
-        tracing::info!("Approval request {approval_id}: {:?}", result.status);
+        let verdict = match result.approved {
+            true => "Approved",
+            false => "Rejected",
+        };
+
+        tracing::info!("Request {approval_id}: {verdict}");
         self.reduce_load(&connection_id);
 
         let response = protos::GetApprovalResponse {
-            status: protos::ApprovalStatus::from(result.status) as i32,
+            approved: result.approved,
             parameters: result.parameters,
         };
 

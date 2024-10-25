@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, getContext } from "svelte"
-  import type { ApprovalRequest } from "$lib/types"
+  import type { ApprovalRequest, ApprovalResponse } from "$lib/types"
   import { EditorView, keymap, highlightActiveLine } from "@codemirror/view"
   import { EditorState } from "@codemirror/state"
   import { defaultKeymap, indentWithTab } from "@codemirror/commands"
@@ -15,8 +15,6 @@
   let editor: Element
   let ws: WebSocket = getContext("ws")
   let showParameters: boolean = false
-
-  let modified = false
   let error = false
 
   let parameters = JSON.parse(request.parameters)
@@ -25,12 +23,11 @@
   onMount(() => {
     const onchange = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
-        modified = true
+        error = false
         parameters = update.state.doc.toString()
 
         try {
           JSON.parse(parameters)
-          error = false
         } catch (e) {
           console.error(e)
           error = true
@@ -59,14 +56,15 @@
   function approve() {
     if (error) return
 
-    let status = modified ? "Modified" : "Approved"
-    let response = { id: request.id, status: status, parameters: "" }
+    // This ensures that the parameters are always valid and formatted
+    // before sending them back to the server.
+    let _params = JSON.parse(parameters)
+    let params = JSON.stringify(_params)
 
-    if (status === "Modified") {
-      // This ensures that the parameters are always valid and formatted
-      // before sending them back to the server.
-      let _params = JSON.parse(parameters)
-      response.parameters = JSON.stringify(_params)
+    let response: ApprovalResponse = {
+      id: request.id,
+      approved: true,
+      parameters: params
     }
 
     ws.send(JSON.stringify(response))
@@ -74,7 +72,12 @@
   }
 
   function deny() {
-    let response = { id: request.id, status: "Denied", parameters: "" }
+    let response: ApprovalResponse = {
+      id: request.id,
+      approved: false,
+      parameters: ""
+    }
+
     ws.send(JSON.stringify(response))
     remove()
   }
