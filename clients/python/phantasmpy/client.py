@@ -4,25 +4,37 @@ from typing import Any, Dict
 from google.protobuf.empty_pb2 import Empty
 from stubs import receiver_pb2 as protos
 from stubs.receiver_pb2_grpc import ReceiverStub
-
-STATUS_TO_STRING: Dict[int, str] = {
-    0: "APPROVED",
-    1: "MODIFIED",
-    2: "DENIED",
-}
+from .types import HeartbeatResponse, GetApprovalResponse
 
 
 class Phantasm:
+    """Create a Phantasm client to interact with the receiver service.
+
+    Args:
+    - host: Hostname of the receiver service.
+    - port: Port where the receiver listens for requests.
+    """
+
     def __init__(self, host: str = "localhost", port: int = 2505):
         channel = grpc.insecure_channel(f"{host}:{port}")
         self.connection = ReceiverStub(channel)
 
-    def heartbeat(self):
-        return self.connection.Heartbeat(request=Empty())
+    def heartbeat(self) -> HeartbeatResponse:
+        """Check if the client can connect to the receiver service."""
 
-    def get_approval(
-        self, name: str, parameters: Dict[Any, Any]
-    ) -> Dict[str, Any]:
+        response = self.connection.Heartbeat(request=Empty())
+        return HeartbeatResponse(version=response.version)
+
+    def get_approval(self, name: str, parameters: Any) -> GetApprovalResponse:
+        """Request approval for a specific operation from the team.
+
+        Args:
+        - name: Name of the operation, typically, the function name.
+        - parameters: Parameters used in the operation. Parameters will be
+            displayed to and can be modified by the approver. That's why it
+            must be JSON serializable.
+        """
+
         try:
             _params = json.dumps(parameters)
             request = protos.GetApprovalRequest(name=name, parameters=_params)
@@ -30,11 +42,12 @@ class Phantasm:
             raise ValueError(f"Invalid parameters: {e}")
 
         response = self.connection.GetApproval(request=request)
-        result = {"status": STATUS_TO_STRING[response.status]}
-        if response.parameters:
-            result["parameters"] = json.loads(response.parameters)
+        status = protos.ApprovalStatus.Name(response.status)
 
-        return result
+        # If the request is approved as MODIFIED,
+        # the parameters will be returned as a JSON string.
+        parameters = response.parameters or ""
+        return GetApprovalResponse(status=status, parameters=parameters)
 
 
 def emulate_get_approval():
@@ -49,12 +62,12 @@ def emulate_get_approval():
     phantasm = Phantasm()
     response = phantasm.get_approval(name="multiply", parameters=params)
 
-    if response["status"] == "APPROVED":
+    if response.status == "APPROVED":
         print("Request Approved")
         print(f"Result: {multiply(**params)}")
-    elif response["status"] == "MODIFIED":
+    elif response.status == "MODIFIED":
         print("Request Modified")
-        result = multiply(**response["parameters"])
+        result = multiply(**response.parameters)
         print(f"Result: {result}")
     else:
         print("Request Denied")
