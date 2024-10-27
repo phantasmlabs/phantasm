@@ -1,0 +1,10 @@
+# Project
+clients
+dashboard
+target
+
+# Other
+.git
+.github
+.gitignore
+.ds_store
