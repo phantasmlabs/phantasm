@@ -1,0 +1,16 @@
+This directory contains GitHub Actions workflows for Phantasm.
+
+There are 3 targets of the workflows:
+- server: Related to the receiver and the coordinator servers.
+- dashboard: Related to the web-based dashboard.
+- sdk-*: Related to the language-specific SDKs.
+
+There are 2 types of workflows:
+- [target]-ci.yml: Workflow for checking the code quality and running tests.
+- [target]-cd.yml: Workflow for building and publishing the package.
+
+This setup is made to isolate the CI and CD workflows only for the changes
+made in the specific target. For example, if we only change the server code,
+only the server-ci.yml and server-cd.yml workflows will be triggered.
+
+NOTE: Please follow the existing naming convention for the workflow files.
