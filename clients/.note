@@ -1,0 +1,11 @@
+This repository contains multiple projects of Phantasm client libraries.
+Each directory contains a separate project for different programming
+languages represented by the directory name.
+
+Each project must have their own README.md file with the following sections:
+- Project Banner
+- Get Started
+
+The project banner can be retrieved from the root README.md file. The Get
+Started section must contain a minimum reproducible example of how to use
+the library.
