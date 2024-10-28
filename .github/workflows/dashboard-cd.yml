@@ -1,4 +1,4 @@
-name: Dashboard CD
+name: Deploy Dashboard
 
 on:
   workflow_dispatch:

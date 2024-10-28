@@ -1,4 +1,4 @@
-name: Server CI
+name: Quality Check Server
 
 on:
   workflow_dispatch:
