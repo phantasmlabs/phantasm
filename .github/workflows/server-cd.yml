@@ -1,4 +1,4 @@
-name: Dashboard CD
+name: Server CD
 
 on:
   workflow_dispatch:
@@ -8,21 +8,28 @@ permissions:
   packages: write
 
 env:
-  NAME: ghcr.io/phantasmlabs/phantasm/dashboard
+  NAME: ghcr.io/phantasmlabs/phantasm/server
 
 jobs:
   publish-image:
-    environment: Dashboard
+    environment: Server
     name: Publish Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Protobuf Compiler
+        run: |
+          sudo apt update && sudo apt upgrade -y
+          sudo apt install -y protobuf-compiler libprotobuf-dev
+
       - name: Get Package Version
         run: |
-          cd dashboard
-          VERSION=$(npm pkg get version | tr -d '\"')
+          VERSION=$(cargo run -- -V | awk '{print $2}')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
@@ -35,7 +42,9 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        run: docker build -t $NAME:$VERSION ./dashboard
+        run: |
+          docker build -t $NAME:$VERSION .
 
       - name: Push Docker Image to GHCR
-        run: docker push $NAME:$VERSION
+        run: |
+          docker push $NAME:$VERSION
