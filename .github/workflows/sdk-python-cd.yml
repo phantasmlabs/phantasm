@@ -1,0 +1,30 @@
+name: Deploy Python Client
+
+on:
+  workflow_dispatch:
+
+env:
+  PYPI_USERNAME: edwinkys
+  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+jobs:
+  publish-package:
+    environment: Clients
+    name: Publish Python Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Publish to PyPI
+        run: |
+          cd clients/python
+          poetry publish -u $PYPI_USERNAME -p $PYPI_TOKEN --build
