@@ -33,6 +33,41 @@ there is only a slight mistake in the action parameters that can be corrected by
 the approvers. This way the action can be approved with some modifications
 instead of rejected.
 
+## Getting Started
+
+The easiest way to get started with Phantasm is by using Docker. There are 2
+components that you need to run before you can start using Phantasm: **Server**
+and **Dashboard**. To run these components, first, you need to pull the Docker
+images of these components:
+
+```bash
+# Replace $TAG with the version of Phantasm you want to use.
+docker pull ghcr.io/phantasmlabs/phantasm/dashboard:$TAG
+docker pull ghcr.io/phantasmlabs/phantasm/server:$TAG
+```
+
+After pulling the images, you can run the components with these commands:
+
+```bash
+# Replace $TAG with the version of Phantasm you pulled.
+docker run -d -p 2515:2515 ghcr.io/phantasmlabs/phantasm/dashboard:$TAG
+docker run -d -p 2505:2505 -p 2510:2510 ghcr.io/phantasmlabs/phantasm/server:$TAG start
+```
+
+After running the components, you will have access to:
+
+- **Dashboard**: [localhost:2515](http://localhost:2515)
+- **Receiver Server**: localhost:2505
+- **Coordinator Server**: localhost:2510
+
+You can use the dashboard to manage the approval workflows by adding a
+connection to Phantasm's Coordinator Server. The Receiver Server is used to
+receive the approval requests from the AI agents via Phantasm's client library.
+Depending on the programming language you use, you can choose the appropriate
+client library from the list below:
+
+- [Python](https://pypi.org/project/phantasmpy)
+
 ## Contributing
 
 The easiest way to contribute to Phantasm is by starring the repository and
