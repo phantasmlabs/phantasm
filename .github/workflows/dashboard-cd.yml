@@ -3,6 +3,9 @@ name: Dashboard CD
 on:
   workflow_dispatch:
 
+permissions:
+  packages: write
+
 env:
   NAME: ghcr.io/phantasm/dashboard
 
@@ -16,8 +19,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log in to GitHub Container Registry
-        run: docker login ghcr.io -u ${{ github.actor }} --password $PASSWORD
+        run: docker login ghcr.io -u $ACTOR --password-stdin <<< $PASSWORD
         env:
+          USERNAME: ${{ github.actor }}
           PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
