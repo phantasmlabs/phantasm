@@ -19,6 +19,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Get Package Version
+        run: |
+          cd dashboard
+          VERSION=$(npm pkg get version | tr -d '\"')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Log in to GitHub Container Registry
         run: echo $PASSWORD | docker login ghcr.io -u $USER --password-stdin
         env:
@@ -30,8 +36,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t $NAME:latest ./dashboard
+          docker build -t $NAME:$VERSION ./dashboard
 
       - name: Push Docker Image to GHCR
         run: |
-          docker push $NAME:latest
+          docker push $NAME:$VERSION
