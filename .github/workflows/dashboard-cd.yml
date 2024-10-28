@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
 
 permissions:
+  contents: read
   packages: write
 
 env:
-  NAME: ghcr.io/phantasm/dashboard
+  NAME: ghcr.io/phantasmlabs/phantasm/dashboard
 
 jobs:
   publish-image:
