@@ -42,9 +42,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        run: |
-          docker build -t $NAME:$VERSION .
+        run: docker build -t $NAME:$VERSION .
 
       - name: Push Docker Image to GHCR
-        run: |
-          docker push $NAME:$VERSION
+        run: docker push $NAME:$VERSION
