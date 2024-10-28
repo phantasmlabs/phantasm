@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "phantasmpy"
-version = "0.1.0-alpha.1"
+version = "0.1.0"
 description = "A Python client to interact with Phantasm's receiver server."
 license = "GPL-3.0-or-later"
 repository = "https://github.com/phantasmlabs/phantasm"

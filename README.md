@@ -33,6 +33,8 @@ there is only a slight mistake in the action parameters that can be corrected by
 the approvers. This way the action can be approved with some modifications
 instead of rejected.
 
+![Demo](https://phantasm-assets.s3.amazonaws.com/demos/0.1.0.gif)
+
 ## Getting Started
 
 The easiest way to get started with Phantasm is by using Docker. There are 2
