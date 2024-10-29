@@ -1,3 +1,11 @@
+[![GitHub](https://tinyurl.com/3w9pfvn6)][github]
+[![Discord](https://tinyurl.com/ss8u3uu6)][discord]
+[![License](https://tinyurl.com/mr39umf7)][license]
+
+[discord]: https://discord.gg/dgevsYhh7P
+[github]: https://github.com/phantasmlabs/phantasm
+[license]: https://github.com/phantasmlabs/phantasm/blob/main/LICENSE
+
 ![Phantasm](https://phantasm-assets.s3.amazonaws.com/banners/0.1.0.png)
 
 Phantasm offers open-source toolkits that allows you to create human-in-the-loop
