@@ -1,6 +1,6 @@
-[![GitHub](https://tinyurl.com/3w9pfvn6)][github]
-[![Discord](https://tinyurl.com/ss8u3uu6)][discord]
-[![License](https://tinyurl.com/mr39umf7)][license]
+[![GitHub](https://tinyurl.com/5xetszfe)][github]
+[![Discord](https://tinyurl.com/5fv83u2h)][discord]
+[![License](https://tinyurl.com/mrxn8fvz)][license]
 
 [discord]: https://discord.gg/dgevsYhh7P
 [github]: https://github.com/phantasmlabs/phantasm
