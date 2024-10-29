@@ -2,6 +2,8 @@ name: Deploy Dashboard
 
 on:
   workflow_dispatch:
+  release:
+    types: [created]
 
 permissions:
   contents: read
