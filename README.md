@@ -16,6 +16,14 @@ that work together to create a seamless HITL experience:
 - **Dashboard**: For the human team to monitor and manage the workflows.
 - **Client**: A library to integrate the workflows into your AI agents.
 
+## Features
+
+- ✅ Fully open-source and free to use
+- ✅ Works out of the box with any AI framework or model
+- ✅ Load balancer to distribute the requests to multiple approvers (Beta)
+- ✅ Web-based dashboard to manage the approval workflows
+- ✅ Easy-to-use client libraries for popular programming languages
+
 ## How It Works
 
 Phantasm allows you to have an approval layer on top of your AI agents. This
