@@ -56,7 +56,10 @@ instead of rejected.
 The easiest way to get started with Phantasm is by using Docker. There are 2
 components that you need to run before you can start using Phantasm: **Server**
 and **Dashboard**. To run these components, first, you need to pull the Docker
-images of these components:
+images of these components.
+
+These Docker images are hosted on GitHub Container Registry:
+[Packages](https://github.com/orgs/phantasmlabs/packages?repo_name=phantasm)
 
 ```bash
 # Replace $TAG with the version of Phantasm you want to use.
