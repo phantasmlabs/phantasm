@@ -3,7 +3,7 @@ name: Deploy Dashboard
 on:
   workflow_dispatch:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
   contents: read
@@ -37,7 +37,9 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        run: docker build -t $NAME:$VERSION ./dashboard
+        run: docker build -t $NAME:$VERSION -t $NAME:latest ./dashboard
 
       - name: Push Docker Image to GHCR
-        run: docker push $NAME:$VERSION
+        run: |
+          docker push $NAME:$VERSION
+          docker push $NAME:latest

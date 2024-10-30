@@ -62,17 +62,15 @@ These Docker images are hosted on GitHub Container Registry:
 [Packages](https://github.com/orgs/phantasmlabs/packages?repo_name=phantasm)
 
 ```bash
-# Replace $TAG with the version of Phantasm you want to use.
-docker pull ghcr.io/phantasmlabs/phantasm/dashboard:$TAG
-docker pull ghcr.io/phantasmlabs/phantasm/server:$TAG
+docker pull ghcr.io/phantasmlabs/phantasm/dashboard:latest
+docker pull ghcr.io/phantasmlabs/phantasm/server:latest
 ```
 
 After pulling the images, you can run the components with these commands:
 
 ```bash
-# Replace $TAG with the version of Phantasm you pulled.
-docker run -d -p 2515:2515 ghcr.io/phantasmlabs/phantasm/dashboard:$TAG
-docker run -d -p 2505:2505 -p 2510:2510 ghcr.io/phantasmlabs/phantasm/server:$TAG start
+docker run -d -p 2515:2515 ghcr.io/phantasmlabs/phantasm/dashboard:latest
+docker run -d -p 2505:2505 -p 2510:2510 ghcr.io/phantasmlabs/phantasm/server:latest start
 ```
 
 After running the components, you will have access to:
