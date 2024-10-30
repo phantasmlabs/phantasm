@@ -32,3 +32,24 @@ to ask in the project's Discord server.
 After familiarizing yourself with the project structure, you can start to work
 on an issue that is listed in the Issues section of the project's repository.
 Some great issues to start with are the ones labeled as **good first issue**.
+
+## Style Guides
+
+To maintain a consistent codebase, we follow a set of style guides for each
+component of the project. These style guides include settings from **rustfmt**
+for the Server, **Prettier** for the Dashboard, and the respective formatters
+for the Client Libraries, that you can find in their configuration files, such
+as **Black** for Python.
+
+### Commit Messages & PRs
+
+To ensure that the project's commit history is clean and easy to read, we follow
+the Conventional Commits specification. When you are pushing changes to the
+project or creating a pull request, please make sure to follow this convention.
+In short, a commit message or a pull request title should look like this:
+
+```
+<type>(optional scope): <description>
+```
+
+Source: [Convention Commits](https://www.conventionalcommits.org)
