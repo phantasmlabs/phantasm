@@ -10,3 +10,15 @@ Each project must have their own README.md file with the following sections:
 The project banner can be retrieved from the root README.md file. The Get
 Started section must contain a minimum reproducible example of how to use
 the library.
+
+Design
+
+Phantasm client libraries should be simple and consistent across all
+programming languages. With that in mind, each library should have a single
+class or similar construct called "Phantasm" which will be the main entry
+point for the library.
+
+The Phantasm class should have the methods listed in the receiver.proto file.
+Optionally, the Phantasm class can have additional methods that are specific
+to the programming language aimed at making the library easier to use such as
+decorators in Python or macros in Rust.
