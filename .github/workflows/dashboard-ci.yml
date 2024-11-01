@@ -1,0 +1,32 @@
+name: Quality Check Dashboard
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+    paths:
+      - "dashboard/**"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "dashboard/**"
+
+jobs:
+  ci:
+    name: Check Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          cd dashboard
+          npm install
+
+      - name: Run Linting & Formatting Check
+        run: |
+          cd dashboard
+          npm run lint

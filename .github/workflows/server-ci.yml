@@ -19,7 +19,7 @@ on:
 
 jobs:
   ci:
-    name: Server CI Checks
+    name: Test & Check Code Quality
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
