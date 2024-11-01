@@ -1,0 +1,70 @@
+site_name: Phantasm
+repo_name: phantasmlabs/phantasm
+repo_url: https://github.com/phantasmlabs/phantasm
+
+theme:
+  name: material
+  logo: assets/favicon64.png
+  favicon: assets/favicon64.png
+
+  icon:
+    repo: fontawesome/brands/github
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      toggle:
+        name: Light Mode
+        icon: material/brightness-7
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      toggle:
+        name: Dark Mode
+        icon: material/brightness-4
+
+  font:
+    text: Cabin
+    code: Inconsolata
+
+  features:
+    - header.autohide
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.footer
+    - content.code.copy
+
+copyright: Copyright &copy; 2024 Phantasm Labs
+
+extra:
+  generator: false
+
+  # TODO: Add more social links
+  social:
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/dgevsYhh7P
+
+extra_css:
+  - styles.css
+
+nav:
+  - Documentation:
+      - Introduction: index.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  - toc:
+      permalink: "#"
