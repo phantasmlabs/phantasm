@@ -34,8 +34,10 @@ impl Receiver for Arc<Phantasm> {
         let approval_id = ApprovalID::new();
         tracing::info!("Approval request is created: {approval_id}");
 
-        // Create a oneshot channel to coordinate the approval request
-        // and response with the approver.
+        // Create a one-time use WebSocket channel to coordinate the
+        // approval response from the approver. The sender is used to send
+        // the approval response from our general WebSocket receiver to
+        // the oneshot receiver.
         let (os_sender, os_receiver) = oneshot::channel::<ApprovalResponse>();
 
         let message = ApprovalRequest {
@@ -73,5 +75,22 @@ impl Receiver for Arc<Phantasm> {
         };
 
         return Ok(Response::new(response));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_heartbeat() {
+        let phantasm = Phantasm::open().unwrap();
+        let service = Arc::new(phantasm);
+
+        let request = Request::new(());
+        let response = service.heartbeat(request).await.unwrap();
+
+        let version = env!("CARGO_PKG_VERSION");
+        assert_eq!(response.get_ref().version, version);
     }
 }
