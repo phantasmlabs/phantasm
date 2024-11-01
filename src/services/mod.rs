@@ -39,8 +39,8 @@ impl Phantasm {
             },
         };
 
-        // Relay the approval response to the oneshot sender to complete
-        // the approval request.
+        // Send the approval response via the oneshot sender to the oneshot
+        // receiver to complete the approval request.
         let approval_id = message.id;
         if let Some(sender) = self.remove_approval(&approval_id) {
             let _ = sender.send(message);
@@ -62,6 +62,11 @@ impl Phantasm {
         connections.get(id).cloned()
     }
 
+    /// Get the connection with the smallest load.
+    ///
+    /// Load refers to the number of approval requests that are currently
+    /// being processed by the connection. This method is used to distribute
+    /// the approval requests somewhat evenly among the connections.
     fn get_lightest_connection(&self) -> Option<ConnectionID> {
         let connections = self.connections.lock().unwrap();
         connections
@@ -97,5 +102,38 @@ impl Phantasm {
     ) -> Option<Sender<ApprovalResponse>> {
         let mut approvals = self.approvals.lock().unwrap();
         approvals.remove(id)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[tokio::test]
+    async fn test_receive_message() {
+        let phantasm = Phantasm::open().unwrap();
+
+        // Simulate queueing a pending approval request.
+        let approval_id = ApprovalID::new();
+        let (sender, _) = tokio::sync::oneshot::channel();
+        phantasm.add_approval(approval_id, sender);
+
+        // Simulate receiving an approval response message.
+        let params = json!({ "key": "value" });
+        let response = ApprovalResponse {
+            id: approval_id,
+            approved: true,
+            parameters: params.to_string(),
+        };
+
+        let response_string = serde_json::to_string(&response).unwrap();
+        let message = Message::Text(response_string);
+        phantasm.receive_message(&message).await;
+
+        // There should be no pending approvals after receiving the message
+        // since the pending approval will be completed and removed.
+        let approvals = phantasm.approvals.lock().unwrap();
+        assert!(approvals.is_empty());
     }
 }
