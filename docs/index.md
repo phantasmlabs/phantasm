@@ -1,5 +1,7 @@
 # Introducing Phantasm
 
+![Demo Dashboard](https://phantasm-assets.s3.amazonaws.com/demos/0.1.0.gif)
+
 Thank you for considering using Phantasm. Phantasm is a simple human-in-the-loop
 (HITL) approval layer for AI agents. With Phantasm, you can build and deploy AI
 agents that can execute critical business tasks safely.
@@ -39,5 +41,3 @@ and waits for approval from the approvers.
 Phantasm comes with a web-based dashboard that you can use to connect to the
 _Coordinator Server_ and monitor the incoming approval requests from your AI
 agents. You or your team can then approve, modify, or reject these requests.
-
-![Demo Dashboard](https://phantasm-assets.s3.amazonaws.com/demos/0.1.0.gif)
