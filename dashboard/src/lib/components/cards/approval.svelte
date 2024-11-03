@@ -110,7 +110,7 @@
   <div bind:this={editor} class="card-editor" />
   {#if error}
     <div class="text-red-500 text-xs text-right">
-      Syntax error occured in the parameters
+      Syntax error occurred in the parameters
     </div>
   {/if}
 </div>
