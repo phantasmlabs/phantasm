@@ -95,15 +95,17 @@
 <small class="text-xs text-gray-300">{request.id}</small>
 
 <div class="group card space-x-4">
-  <div class="w-full flex items-center space-x-1">
-    <button
-      class="text-gray-400"
-      on:click={() => {
-        showTooltip = !showTooltip
-      }}
-    >
-      <Information size={iconSize} />
-    </button>
+  <div class="w-full flex items-center space-x-2">
+    {#if request.context}
+      <button
+        class="text-gray-400"
+        on:click={() => {
+          showTooltip = !showTooltip
+        }}
+      >
+        <Information size={iconSize} />
+      </button>
+    {/if}
     <p class="font-mono font-bold truncate">
       {request.name}
     </p>
