@@ -14,6 +14,7 @@ export type ApprovalRequest = {
   id: string
   name: string
   parameters: string
+  context: string
 }
 
 export type ApprovalResponse = {

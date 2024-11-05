@@ -5,7 +5,15 @@
   import { EditorState } from "@codemirror/state"
   import { defaultKeymap, indentWithTab } from "@codemirror/commands"
   import { javascript } from "@codemirror/lang-javascript"
-  import { Checkmark, CloseLarge, PartitionSame } from "carbon-icons-svelte"
+  import Tooltip from "../utils/tooltip.svelte"
+
+  // Icons.
+  import {
+    Checkmark,
+    CloseLarge,
+    PartitionSame,
+    Information
+  } from "carbon-icons-svelte"
 
   const iconSize = 16
 
@@ -14,6 +22,7 @@
 
   let editor: Element
   let ws: WebSocket = getContext("ws")
+  let showTooltip: boolean = false
   let showParameters: boolean = false
   let error = false
 
@@ -71,7 +80,7 @@
     remove()
   }
 
-  function deny() {
+  function reject() {
     let response: ApprovalResponse = {
       id: request.id,
       approved: false,
@@ -86,13 +95,25 @@
 <small class="text-xs text-gray-300">{request.id}</small>
 
 <div class="group card space-x-4">
-  <div class="w-full font-mono font-bold truncate">{request.name}</div>
+  <div class="w-full flex items-center space-x-1">
+    <button
+      class="text-gray-400"
+      on:click={() => {
+        showTooltip = !showTooltip
+      }}
+    >
+      <Information size={iconSize} />
+    </button>
+    <p class="font-mono font-bold truncate">
+      {request.name}
+    </p>
+  </div>
   <div class="flex flex-none space-x-1">
     <button class="card-button green space-x-1" on:click={approve}>
       <Checkmark size={iconSize} />
       <span>Approve</span>
     </button>
-    <button class="card-button red" on:click={deny}>
+    <button class="card-button red" on:click={reject}>
       <CloseLarge size={iconSize} />
     </button>
     <button
@@ -104,6 +125,15 @@
       <PartitionSame size={iconSize} />
     </button>
   </div>
+
+  <!-- This tooltip is triggered by the info icon button. -->
+  <Tooltip
+    show={showTooltip}
+    content={request.context}
+    close={() => {
+      showTooltip = false
+    }}
+  />
 </div>
 
 <div class="card-editor-container space-y-1 {showParameters ? 'show' : 'hide'}">
@@ -117,7 +147,7 @@
 
 <style lang="postcss">
   .card {
-    @apply flex flex-row items-center p-4 rounded;
+    @apply flex flex-row relative items-center p-4 rounded;
     @apply border bg-gray-50 border-gray-200;
   }
 
