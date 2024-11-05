@@ -18,15 +18,20 @@
 
 {#if show && content}
   <div class="tooltip" use:clickoutside={close}>
-    <p class="text-xs text-gray-500 whitespace-pre-line">
+    <div class="tooltip-content">
       {content}
-    </p>
+    </div>
   </div>
 {/if}
 
 <style lang="postcss">
   .tooltip {
     @apply absolute bottom-[48px] left-0;
-    @apply max-w-96 p-4 rounded shadow bg-white;
+    @apply rounded shadow bg-white;
+  }
+
+  .tooltip-content {
+    @apply text-xs text-gray-500 whitespace-pre-line;
+    @apply max-w-96 max-h-48 p-4 overflow-y-auto;
   }
 </style>
