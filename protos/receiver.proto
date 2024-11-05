@@ -30,6 +30,7 @@ message HeartbeatResponse {
 message GetApprovalRequest {
     string name = 1;
     string parameters = 2;
+    string context = 3;
 }
 
 message GetApprovalResponse {

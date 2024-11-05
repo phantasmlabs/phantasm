@@ -1,3 +1,4 @@
+use crate::protos;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use tokio::sync::mpsc::UnboundedSender;
@@ -51,6 +52,18 @@ pub struct ApprovalRequest {
     pub id: ApprovalID,
     pub name: String,
     pub parameters: String,
+    pub context: String,
+}
+
+impl From<protos::GetApprovalRequest> for ApprovalRequest {
+    fn from(value: protos::GetApprovalRequest) -> Self {
+        Self {
+            id: ApprovalID::new(),
+            name: value.name,
+            parameters: value.parameters,
+            context: value.context,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -58,4 +71,12 @@ pub struct ApprovalResponse {
     pub id: ApprovalID,
     pub approved: bool,
     pub parameters: String,
+}
+
+impl From<ApprovalResponse> for protos::GetApprovalResponse {
+    fn from(value: ApprovalResponse) -> Self {
+        let approved = value.approved;
+        let parameters = value.parameters;
+        Self { approved, parameters }
+    }
 }
