@@ -55,13 +55,26 @@ pub struct ApprovalRequest {
     pub context: String,
 }
 
+impl ApprovalRequest {
+    pub fn sanitize_context(context: impl Into<String>) -> String {
+        let context: String = context.into();
+        if context.is_empty() {
+            return context;
+        }
+
+        let context = context.trim();
+        let lines: Vec<&str> = context.lines().map(str::trim).collect();
+        lines.join("\n")
+    }
+}
+
 impl From<protos::GetApprovalRequest> for ApprovalRequest {
     fn from(value: protos::GetApprovalRequest) -> Self {
         Self {
             id: ApprovalID::new(),
             name: value.name,
             parameters: value.parameters,
-            context: value.context,
+            context: Self::sanitize_context(value.context),
         }
     }
 }
