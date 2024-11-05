@@ -22,7 +22,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\x0ereceiver.proto\x12\x08receiver\x1a\x1bgoogle/protobuf/empty.proto"$\n\x11HeartbeatResponse\x12\x0f\n\x07version\x18\x01 \x01(\t"6\n\x12GetApprovalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x12\n\nparameters\x18\x02 \x01(\t";\n\x13GetApprovalResponse\x12\x10\n\x08\x61pproved\x18\x01 \x01(\x08\x12\x12\n\nparameters\x18\x02 \x01(\t2\x9c\x01\n\x08Receiver\x12\x42\n\tHeartbeat\x12\x16.google.protobuf.Empty\x1a\x1b.receiver.HeartbeatResponse"\x00\x12L\n\x0bGetApproval\x12\x1c.receiver.GetApprovalRequest\x1a\x1d.receiver.GetApprovalResponse"\x00\x62\x06proto3'
+    b'\n\x0ereceiver.proto\x12\x08receiver\x1a\x1bgoogle/protobuf/empty.proto"$\n\x11HeartbeatResponse\x12\x0f\n\x07version\x18\x01 \x01(\t"G\n\x12GetApprovalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x12\n\nparameters\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x03 \x01(\t";\n\x13GetApprovalResponse\x12\x10\n\x08\x61pproved\x18\x01 \x01(\x08\x12\x12\n\nparameters\x18\x02 \x01(\t2\x9c\x01\n\x08Receiver\x12\x42\n\tHeartbeat\x12\x16.google.protobuf.Empty\x1a\x1b.receiver.HeartbeatResponse"\x00\x12L\n\x0bGetApproval\x12\x1c.receiver.GetApprovalRequest\x1a\x1d.receiver.GetApprovalResponse"\x00\x62\x06proto3'
 )
 
 _globals = globals()
@@ -33,9 +33,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
     _globals["_HEARTBEATRESPONSE"]._serialized_start = 57
     _globals["_HEARTBEATRESPONSE"]._serialized_end = 93
     _globals["_GETAPPROVALREQUEST"]._serialized_start = 95
-    _globals["_GETAPPROVALREQUEST"]._serialized_end = 149
-    _globals["_GETAPPROVALRESPONSE"]._serialized_start = 151
-    _globals["_GETAPPROVALRESPONSE"]._serialized_end = 210
-    _globals["_RECEIVER"]._serialized_start = 213
-    _globals["_RECEIVER"]._serialized_end = 369
+    _globals["_GETAPPROVALREQUEST"]._serialized_end = 166
+    _globals["_GETAPPROVALRESPONSE"]._serialized_start = 168
+    _globals["_GETAPPROVALRESPONSE"]._serialized_end = 227
+    _globals["_RECEIVER"]._serialized_start = 230
+    _globals["_RECEIVER"]._serialized_end = 386
 # @@protoc_insertion_point(module_scope)

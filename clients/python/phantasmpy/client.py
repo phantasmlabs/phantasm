@@ -25,12 +25,18 @@ class Phantasm:
         response = self.connection.Heartbeat(request=Empty())
         return HeartbeatResponse(version=response.version)
 
-    def get_approval(self, name: str, parameters: Any) -> GetApprovalResponse:
+    def get_approval(
+        self,
+        name: str,
+        parameters: Any,
+        context: str = "",
+    ) -> GetApprovalResponse:
         """Request approval for an operation from the approver.
 
         Args:
         - name: Name of the operation, typically, the function name.
         - parameters: Parameters used in the operation.
+        - context: Additional information about the operation.
 
         Parameters will be relayed as a JSON string to the approver. The
         approver can choose to modify the parameters with the correct values
@@ -38,8 +44,11 @@ class Phantasm:
         """
 
         try:
-            _params = json.dumps(parameters)
-            request = protos.GetApprovalRequest(name=name, parameters=_params)
+            request = protos.GetApprovalRequest(
+                name=name,
+                parameters=json.dumps(parameters),
+                context=context,
+            )
         except Exception as e:
             raise ValueError(f"Invalid parameters: {e}")
 
@@ -60,7 +69,11 @@ def emulate_get_approval():
     }
 
     phantasm = Phantasm()
-    response = phantasm.get_approval(name="multiply", parameters=params)
+    response = phantasm.get_approval(
+        name="multiply",
+        parameters=params,
+        context="Multiply two numbers: x and y.",
+    )
 
     if response.approved:
         # Here, we're going to trust our approver and unpack the parameters.

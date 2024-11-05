@@ -29,9 +29,8 @@ impl Receiver for Arc<Phantasm> {
 
         // Unwrap is safe because the connection ID is guaranteed to exist.
         let connection = self.get_connection(&connection_id).unwrap();
-
-        let request = request.into_inner();
-        let approval_id = ApprovalID::new();
+        let message = ApprovalRequest::from(request.into_inner());
+        let approval_id = message.id;
         tracing::info!("Approval request is created: {approval_id}");
 
         // Create a one-time use WebSocket channel to coordinate the
@@ -39,12 +38,6 @@ impl Receiver for Arc<Phantasm> {
         // the approval response from our general WebSocket receiver to
         // the oneshot receiver.
         let (os_sender, os_receiver) = oneshot::channel::<ApprovalResponse>();
-
-        let message = ApprovalRequest {
-            id: approval_id,
-            name: request.name,
-            parameters: request.parameters,
-        };
 
         // Send the serialized approval request to the approver.
         let message = serde_json::to_string(&message).unwrap();
@@ -68,13 +61,7 @@ impl Receiver for Arc<Phantasm> {
 
         tracing::info!("Request {approval_id}: {verdict}");
         self.reduce_load(&connection_id);
-
-        let response = protos::GetApprovalResponse {
-            approved: result.approved,
-            parameters: result.parameters,
-        };
-
-        return Ok(Response::new(response));
+        Ok(Response::new(result.into()))
     }
 }
 
