@@ -5,7 +5,35 @@ latest release first. Since Phantasm project consists of multiple independent
 projects (e.g., server, dashboard, client libraries), the version of the release
 will use the date of the release in the format of **YYYY.MM.DD**.
 
+To stay consistent with each release, when creating a new release on GitHub, we
+use the version format above as the tag name and the release title. The release
+notes should be added to the release description in the following format:
+
+```md
+Release Note Content
+
+### Contributors
+
+- @username
+- @username
+
+### Full Changelog
+
+GitHub Generated Changelog URL
+```
+
 <!-- Add release notes below this line. -->
+
+### 2024.11.05
+
+This release includes the following changes:
+
+- Added context parameter to the approval request Protobuf message.
+- Added a dedicated documentation website for Phantasm using MkDocs.
+- Added initial unit tests for the server component.
+- Fixed spelling error in the approval request card in the dashboard.
+
+Documentation: [docs.phantasmlabs.com](https://docs.phantasmlabs.com)
 
 ### 2024.10.29
 
