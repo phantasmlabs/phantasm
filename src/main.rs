@@ -8,12 +8,14 @@ use clap::{arg, ArgMatches, Command};
 use futures::{SinkExt, StreamExt};
 use protos::receiver_server::ReceiverServer;
 use services::Phantasm;
+use std::env;
 use std::net::{IpAddr, Ipv4Addr};
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tokio::sync::mpsc;
 use tokio_tungstenite::accept_async;
 use tonic::transport::Server;
+use tonic::{Request, Status};
 use types::{Connection, ConnectionID};
 
 const START_COMMAND: &str = "start";
@@ -75,14 +77,36 @@ async fn start_handler(args: &ArgMatches) {
 }
 
 async fn start_receiver_server(service: Arc<Phantasm>, port: u16) {
+    let service = ReceiverServer::with_interceptor(service, auth_interceptor);
     let addr = format!("[::]:{port}").parse().unwrap();
     tracing::info!("Receiver server is ready on port {port}");
 
     Server::builder()
-        .add_service(ReceiverServer::new(service))
+        .add_service(service)
         .serve(addr)
         .await
         .expect("Failed to start the receiver server");
+}
+
+fn auth_interceptor(request: Request<()>) -> Result<Request<()>, Status> {
+    let secret = env::var("PHANTASM_SECRET").unwrap_or_default();
+    if secret.is_empty() {
+        return Ok(request);
+    }
+
+    let unauthorized = {
+        let message = "Invalid or missing authorization key";
+        Status::unauthenticated(message)
+    };
+
+    if let Some(auth) = request.metadata().get("authorization") {
+        let auth = auth.to_str().map_err(|_| unauthorized.clone())?;
+        if auth == secret.as_str() {
+            return Ok(request);
+        }
+    }
+
+    Err(unauthorized)
 }
 
 async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
