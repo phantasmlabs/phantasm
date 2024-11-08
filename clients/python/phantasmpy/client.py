@@ -13,16 +13,27 @@ class Phantasm:
     Args:
     - host: Hostname of the receiver service.
     - port: Port where the receiver listens for requests.
+    - secret: Key used to authenticate the client with the receiver.
     """
 
-    def __init__(self, host: str = "localhost", port: int = 2505):
+    def __init__(
+        self,
+        host: str = "localhost",
+        port: int = 2505,
+        secret: str = "",
+    ):
         channel = grpc.insecure_channel(f"{host}:{port}")
         self.connection = ReceiverStub(channel)
+        self.metadata = [("authorization", secret)]
 
     def heartbeat(self) -> HeartbeatResponse:
         """Check if the client can connect to the receiver service."""
 
-        response = self.connection.Heartbeat(request=Empty())
+        response = self.connection.Heartbeat(
+            request=Empty(),
+            metadata=self.metadata,
+        )
+
         return HeartbeatResponse(version=response.version)
 
     def get_approval(
@@ -52,11 +63,15 @@ class Phantasm:
         except Exception as e:
             raise ValueError(f"Invalid parameters: {e}")
 
-        response = self.connection.GetApproval(request=request)
-        approved = response.approved
-        parameters = response.parameters or ""
+        response = self.connection.GetApproval(
+            request=request,
+            metadata=self.metadata,
+        )
 
-        return GetApprovalResponse(approved=approved, parameters=parameters)
+        return GetApprovalResponse(
+            approved=response.approved,
+            parameters=response.parameters or "",
+        )
 
 
 def emulate_get_approval():
