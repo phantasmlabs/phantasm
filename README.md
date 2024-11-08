@@ -95,9 +95,13 @@ and grow the community. If you are interested in contributing to the project in
 the form of code, design, or documentation, please read our
 [Contributing Guidelines](.github/CONTRIBUTING.md).
 
-Phantasm is licensed under the GNU General Public License v3.0. By contributing
-to the project, you agree to license your contributions under the same license.
-For more information, please read our [License](LICENSE).
+Other than the clients, which is licensed under the MIT License, Phantasm is
+licensed under the GNU General Public License v3.0. By contributing to the
+project, you agree to license your contributions under the applicable license.
+For more information, please read our licenses:
+
+- [MIT License](clients/LICENSE)
+- [GNU General Public License v3.0](LICENSE)
 
 ## Disclaimer
 

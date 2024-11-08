@@ -2,7 +2,7 @@
 name = "phantasmpy"
 version = "0.1.1"
 description = "A Python client to interact with Phantasm's receiver server."
-license = "GPL-3.0-or-later"
+license = "MIT"
 repository = "https://github.com/phantasmlabs/phantasm"
 readme = "README.md"
 authors = ["Edwin Kys <edwin@phantasmlabs.com>"]
