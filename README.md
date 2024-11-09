@@ -93,8 +93,8 @@ client library from the list below:
 
 Phantasm is designed for real-time approval workflows for AI agents with some
 non-technical dependencies that could be unpredictable such as the availability
-of the approvers. Therefore, it is important to have a good error handling and
-fallback mechanism in place. Here are some edge cases that you should consider
+of the approvers. Therefore, it is important to have good error handling and
+fallback mechanisms in place. Here are some edge cases that you should consider
 before using Phantasm in production:
 
 - No approver is available to monitor and approve the action.
