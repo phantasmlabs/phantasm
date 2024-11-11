@@ -31,5 +31,4 @@ build-backend = "poetry.core.masonry.api"
 line-length = 80
 
 [tool.poetry.scripts]
-generate_grpc_stubs = "scripts:generate_grpc_stubs"
-emulate_get_approval = "phantasmpy.client:emulate_get_approval"
+test_get_approval = "phantasmpy.client:test_get_approval"

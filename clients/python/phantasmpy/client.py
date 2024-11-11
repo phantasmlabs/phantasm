@@ -74,10 +74,7 @@ class Phantasm:
         )
 
 
-def emulate_get_approval():
-    def multiply(x: int, y: int):
-        return x * y
-
+def test_get_approval():
     params = {
         "x": 5,
         "y": 10,
@@ -91,9 +88,7 @@ def emulate_get_approval():
     )
 
     if response.approved:
-        # Here, we're going to trust our approver and unpack the parameters.
-        result = multiply(**response.parameters)
-
+        result = response.parameters["x"] * response.parameters["y"]
         print("Request Approved")
         print(f"Result: {result}")
     else:
