@@ -20,18 +20,19 @@ Phantasm consists of 3 main components: Client, Server, and Dashboard.
 
 ### Server
 
-The Server is the primary component that connects the Client and the Dashboard.
+The server is the primary component that connects the client and the dashboard.
 The server responsible for receiving the approval requests from the client is
 called the _Receiver Server_ and the server responsible for coordinating the
 approval requests with the dashboard is called the _Coordinator Server_.
 
-The _Receiver Server_ uses gRPC while the _Coordinator Server_ uses WebSocket.
-Both servers are written in Rust and are controlled by Phantasm's CLI. If you're
-using Docker, this CLI is already the primary entry point for the image.
+The _Receiver Server_ uses gRPC while the _Coordinator Server_ uses WebSocket
+protocol. Both servers are written in Rust and are controlled by Phantasm's CLI.
+If you're using Docker, this CLI is already the primary entry point for the
+image.
 
 ### Client
 
-The Client is a language-specific library that you can use to connect your AI
+The client is a language-specific library that you can use to connect your AI
 agent to the _Receiver Server_. The core concept of the client is to send an
 approval request to the server before your AI agent executes a certain function
 and waits for approval from the approvers.
