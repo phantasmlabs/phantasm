@@ -16,8 +16,8 @@ all:
 generate_grpc_stubs:
 	@echo "Generating gRPC stubs..."
 	@python -m grpc_tools.protoc -I./protos \
-	  --python_out=./clients/python/stubs \
-		--grpc_python_out=./clients/python/stubs \
+	  --python_out=./clients/python/phantasmpy/stubs \
+		--grpc_python_out=./clients/python/phantasmpy/stubs \
 		./protos/*.proto
 
 	@echo "$(GREEN)gRPC stubs generated successfully!$(RESET)"

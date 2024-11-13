@@ -2,8 +2,8 @@ import grpc
 import json
 from typing import Any, Dict
 from google.protobuf.empty_pb2 import Empty
-from stubs import receiver_pb2 as protos
-from stubs.receiver_pb2_grpc import ReceiverStub
+from .stubs import receiver_pb2 as protos
+from .stubs.receiver_pb2_grpc import ReceiverStub
 from .types import HeartbeatResponse, GetApprovalResponse
 
 
