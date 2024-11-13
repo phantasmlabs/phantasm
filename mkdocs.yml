@@ -53,6 +53,7 @@ extra_css:
 nav:
   - Documentation:
       - Introduction: index.md
+      - Configuration: docs/configuration.md
       - API Reference: docs/reference.md
 
 markdown_extensions:
