@@ -127,7 +127,7 @@ mod tests {
             parameters: params.to_string(),
             approver: Approver {
                 name: "Alice".to_string(),
-                email: "alice@wonderland.com".to_string(),
+                email: "alice@thewonderland.com".to_string(),
             },
         };
 
