@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, getContext } from "svelte"
-  import type { ApprovalRequest, ApprovalResponse } from "$lib/types"
+  import { approver } from "$lib/store"
+  import type { ApprovalRequest, ApprovalResponse, Approver } from "$lib/types"
   import { EditorView, keymap, highlightActiveLine } from "@codemirror/view"
   import { EditorState } from "@codemirror/state"
   import { defaultKeymap, indentWithTab } from "@codemirror/commands"
@@ -73,7 +74,8 @@
     let response: ApprovalResponse = {
       id: request.id,
       approved: true,
-      parameters: params
+      parameters: params,
+      approver: $approver as Approver
     }
 
     ws.send(JSON.stringify(response))
@@ -84,7 +86,8 @@
     let response: ApprovalResponse = {
       id: request.id,
       approved: false,
-      parameters: ""
+      parameters: "",
+      approver: $approver as Approver
     }
 
     ws.send(JSON.stringify(response))

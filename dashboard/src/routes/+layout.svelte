@@ -76,7 +76,7 @@
       <div class="flex flex-col space-y-3">
         <h3>Approver Profile</h3>
         <small>
-          This information gives more context to the approval response.
+          This information adds more context to the approval response.
         </small>
       </div>
       <div class="flex flex-col space-y-3">

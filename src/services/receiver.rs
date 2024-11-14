@@ -54,12 +54,13 @@ impl Receiver for Arc<Phantasm> {
             Status::internal("Failed to receive approval response")
         })?;
 
+        let approver = &result.approver.name;
         let verdict = match result.approved {
             true => "approved",
             false => "rejected",
         };
 
-        tracing::info!("The request {approval_id} is {verdict}");
+        tracing::info!("The request {approval_id} is {verdict} by {approver}");
         self.reduce_load(&connection_id);
         Ok(Response::new(result.into()))
     }
