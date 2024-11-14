@@ -125,6 +125,10 @@ mod tests {
             id: approval_id,
             approved: true,
             parameters: params.to_string(),
+            approver: Approver {
+                name: "Alice".to_string(),
+                email: "alice@wonderland.com".to_string(),
+            },
         };
 
         let response_string = serde_json::to_string(&response).unwrap();
