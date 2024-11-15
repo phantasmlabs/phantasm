@@ -1,6 +1,7 @@
 <script lang="ts">
   import { flip } from "svelte/animate"
   import { connections } from "$lib/store"
+  import type { Connection } from "$lib/types"
   import Wordmark from "$lib/components/utils/wordmark.svelte"
   import Title from "$lib/components/utils/title.svelte"
   import ActionButton from "$lib/components/buttons/action.svelte"
@@ -25,19 +26,19 @@
       return
     }
 
-    let new_connection = {
+    let connection: Connection = {
       id: crypto.randomUUID(),
       name: name,
       address: address
     }
 
     connections.update((conn) => {
-      conn.push(new_connection)
+      conn.push(connection)
       return conn
     })
 
     window.localStorage.setItem("connections", JSON.stringify($connections))
-    connect(new_connection.id)
+    connect(connection.id)
   }
 
   function deleteConnection(id: string) {

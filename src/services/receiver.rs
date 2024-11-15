@@ -31,7 +31,7 @@ impl Receiver for Arc<Phantasm> {
         let connection = self.get_connection(&connection_id).unwrap();
         let message = ApprovalRequest::from(request.into_inner());
         let approval_id = message.id;
-        tracing::info!("Approval request is created: {approval_id}");
+        tracing::info!("An approval request is created: {approval_id}");
 
         // Create a one-time use WebSocket channel to coordinate the
         // approval response from the approver. The sender is used to send
@@ -54,12 +54,13 @@ impl Receiver for Arc<Phantasm> {
             Status::internal("Failed to receive approval response")
         })?;
 
+        let approver = &result.approver.name;
         let verdict = match result.approved {
-            true => "Approved",
-            false => "Rejected",
+            true => "approved",
+            false => "rejected",
         };
 
-        tracing::info!("Request {approval_id}: {verdict}");
+        tracing::info!("The request {approval_id} is {verdict} by {approver}");
         self.reduce_load(&connection_id);
         Ok(Response::new(result.into()))
     }

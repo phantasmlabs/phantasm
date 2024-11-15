@@ -79,7 +79,7 @@ async fn start_handler(args: &ArgMatches) {
 async fn start_receiver_server(service: Arc<Phantasm>, port: u16) {
     let service = ReceiverServer::with_interceptor(service, auth_interceptor);
     let addr = format!("[::]:{port}").parse().unwrap();
-    tracing::info!("Receiver server is ready on port {port}");
+    tracing::info!("The receiver server is ready on port {port}");
 
     Server::builder()
         .add_service(service)
@@ -113,7 +113,7 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
     let addr = format!("[::]:{port}");
     let listener = TcpListener::bind(addr).await.unwrap();
 
-    tracing::info!("Coordinator server is ready on port {port}");
+    tracing::info!("The coordinator server is ready on port {port}");
 
     while let Ok((stream, _)) = listener.accept().await {
         let peer_addr = stream
@@ -125,7 +125,7 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
             peer_ip = IpAddr::V4(Ipv4Addr::LOCALHOST);
         }
 
-        tracing::info!("Connection established with {peer_ip}");
+        tracing::info!("A connection is established with {peer_ip}");
 
         let service = service.clone();
         tokio::spawn(async move {
@@ -143,7 +143,7 @@ async fn start_coordinator_server(service: Arc<Phantasm>, port: u16) {
                 }
 
                 service.remove_connection(&connection_id);
-                tracing::info!("Connection closed: {peer_ip}");
+                tracing::info!("A connection is closed: {peer_ip}");
             });
 
             tokio::spawn(async move {

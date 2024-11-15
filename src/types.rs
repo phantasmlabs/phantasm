@@ -84,6 +84,7 @@ pub struct ApprovalResponse {
     pub id: ApprovalID,
     pub approved: bool,
     pub parameters: String,
+    pub approver: Approver,
 }
 
 impl From<ApprovalResponse> for protos::GetApprovalResponse {
@@ -92,4 +93,10 @@ impl From<ApprovalResponse> for protos::GetApprovalResponse {
         let parameters = value.parameters;
         Self { approved, parameters }
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Approver {
+    pub name: String,
+    pub email: String,
 }

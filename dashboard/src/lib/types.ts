@@ -21,4 +21,10 @@ export type ApprovalResponse = {
   id: string
   approved: boolean
   parameters: string
+  approver: Approver
+}
+
+export type Approver = {
+  name: string
+  email: string
 }
