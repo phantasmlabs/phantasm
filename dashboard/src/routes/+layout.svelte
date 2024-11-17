@@ -8,11 +8,13 @@
   import { flip } from "svelte/animate"
   import { onMount } from "svelte"
   import { connections, alerts, approver } from "$lib/store"
+  import { fly } from "svelte/transition"
 
   import Alert from "$lib/components/cards/alert.svelte"
   import Sidebar from "$lib/components/navs/sidebar.svelte"
   import Header from "$lib/components/navs/header.svelte"
 
+  const animationDuration = 200
   let hydrated = false
   let showSidebar = true
 
@@ -34,19 +36,6 @@
     alerts.update((alerts) => alerts.filter((alert) => alert.id !== id))
   }
 </script>
-
-<div class="fixed bottom-0 right-0 space-y-3 p-6 w-full md:w-[480px]">
-  {#each $alerts as alert (alert.id)}
-    <div animate:flip={{ duration: 200 }}>
-      <Alert
-        {alert}
-        remove={() => {
-          removeAlert(alert.id)
-        }}
-      />
-    </div>
-  {/each}
-</div>
 
 {#if hydrated}
   <div class="flex bg-gray-100">
@@ -70,3 +59,20 @@
     </div>
   </div>
 {/if}
+
+<div class="fixed bottom-0 right-0 space-y-3 p-6 w-full md:w-[480px]">
+  {#each $alerts as alert (alert.id)}
+    <div
+      animate:flip={{ duration: animationDuration }}
+      in:fly={{ x: -100, duration: animationDuration }}
+      out:fly={{ x: 300, duration: animationDuration }}
+    >
+      <Alert
+        {alert}
+        remove={() => {
+          removeAlert(alert.id)
+        }}
+      />
+    </div>
+  {/each}
+</div>
