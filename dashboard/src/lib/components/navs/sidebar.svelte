@@ -1,6 +1,7 @@
 <script lang="ts">
   import { approver } from "$lib/store"
   import type { Approver } from "$lib/types"
+  import { fade, slide } from "svelte/transition"
   import Wordmark from "$lib/components/utils/wordmark.svelte"
   import BasicModal from "$lib/components/modals/basic.svelte"
   import InputField from "$lib/components/inputs/field.svelte"
@@ -8,6 +9,7 @@
   import { SidePanelCloseFilled } from "carbon-icons-svelte"
 
   export let open: boolean = true
+  export let close: () => void
 
   let showApproverModal = !$approver
   let approverName = ""
@@ -30,11 +32,16 @@
 </script>
 
 {#if open}
-  <div class="overlay" />
-  <nav class="sidebar">
+  <div
+    class="overlay"
+    on:click={close}
+    role="none"
+    transition:fade={{ duration: 100 }}
+  />
+  <nav class="sidebar" transition:slide={{ axis: "x", duration: 250 }}>
     <div class="control-section">
       <Wordmark size="sm" />
-      <button class="sidebar-button-toggle">
+      <button class="sidebar-button-toggle" on:click={close}>
         <SidePanelCloseFilled size={24} />
       </button>
     </div>

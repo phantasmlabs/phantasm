@@ -14,6 +14,7 @@
   import Header from "$lib/components/navs/header.svelte"
 
   let hydrated = false
+  let showSidebar = true
 
   onMount(() => {
     let storedConnections = window.localStorage.getItem("connections")
@@ -49,10 +50,19 @@
 
 {#if hydrated}
   <div class="flex bg-gray-100">
-    <Sidebar />
+    <Sidebar
+      open={showSidebar}
+      close={() => {
+        showSidebar = false
+      }}
+    />
     <div class="relative w-full">
-      <Header />
-      <main class="max-h-dvh overflow-y-auto">
+      <Header
+        openSidebar={() => {
+          showSidebar = true
+        }}
+      />
+      <main class="h-dvh overflow-y-auto">
         <!-- This pads the layout in place of the header. -->
         <div class="h-[80px]" />
         <slot />

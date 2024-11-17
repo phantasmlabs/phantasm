@@ -1,9 +1,10 @@
 <script lang="ts">
   import { SidePanelOpenFilled } from "carbon-icons-svelte"
+  export let openSidebar: () => void
 </script>
 
 <header class="header space-x-4">
-  <button class="sidebar-button-toggle">
+  <button class="sidebar-button-toggle" on:click={openSidebar}>
     <SidePanelOpenFilled size={24} />
   </button>
 </header>
