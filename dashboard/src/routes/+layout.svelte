@@ -13,6 +13,8 @@
   import BasicModal from "$lib/components/modals/basic.svelte"
   import InputField from "$lib/components/inputs/field.svelte"
   import BasicButton from "$lib/components/buttons/basic.svelte"
+  import Sidebar from "$lib/components/navs/sidebar.svelte"
+  import Header from "$lib/components/navs/header.svelte"
 
   let hydrated = false
   let showApproverModal = false
@@ -69,7 +71,17 @@
 </div>
 
 {#if hydrated}
-  <slot />
+  <div class="flex bg-gray-100">
+    <Sidebar />
+    <div class="relative w-full">
+      <Header />
+      <main class="max-h-dvh overflow-y-auto">
+        <!-- This is used to pad the layout in place of the header. -->
+        <div class="h-[80px]" />
+        <slot />
+      </main>
+    </div>
+  </div>
 
   <BasicModal bind:show={showApproverModal}>
     <div class="flex flex-col space-y-6">
