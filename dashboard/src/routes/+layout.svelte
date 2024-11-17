@@ -8,19 +8,12 @@
   import { flip } from "svelte/animate"
   import { onMount } from "svelte"
   import { connections, alerts, approver } from "$lib/store"
-  import type { Approver } from "$lib/types"
+
   import Alert from "$lib/components/cards/alert.svelte"
-  import BasicModal from "$lib/components/modals/basic.svelte"
-  import InputField from "$lib/components/inputs/field.svelte"
-  import BasicButton from "$lib/components/buttons/basic.svelte"
   import Sidebar from "$lib/components/navs/sidebar.svelte"
   import Header from "$lib/components/navs/header.svelte"
 
   let hydrated = false
-  let showApproverModal = false
-
-  let approverName = ""
-  let approverEmail = ""
 
   onMount(() => {
     let storedConnections = window.localStorage.getItem("connections")
@@ -33,27 +26,11 @@
       approver.set(JSON.parse(storedApprover))
     }
 
-    showApproverModal = !$approver
     hydrated = true
   })
 
   function removeAlert(id: string) {
     alerts.update((alerts) => alerts.filter((alert) => alert.id !== id))
-  }
-
-  function saveProfile(name: string, email: string) {
-    if (!name || !email) {
-      return
-    }
-
-    let profile: Approver = {
-      name: name,
-      email: email
-    }
-
-    approver.set(profile)
-    window.localStorage.setItem("approver", JSON.stringify($approver))
-    showApproverModal = false
   }
 </script>
 
@@ -76,39 +53,10 @@
     <div class="relative w-full">
       <Header />
       <main class="max-h-dvh overflow-y-auto">
-        <!-- This is used to pad the layout in place of the header. -->
+        <!-- This pads the layout in place of the header. -->
         <div class="h-[80px]" />
         <slot />
       </main>
     </div>
   </div>
-
-  <BasicModal bind:show={showApproverModal}>
-    <div class="flex flex-col space-y-6">
-      <div class="flex flex-col space-y-3">
-        <h3>Approver Profile</h3>
-        <small>
-          This information adds more context to the approval response.
-        </small>
-      </div>
-      <div class="flex flex-col space-y-3">
-        <InputField
-          id="name"
-          label="Full Name"
-          placeholder="Justin Case"
-          bind:value={approverName}
-        />
-        <InputField
-          id="email"
-          label="Email Address"
-          placeholder="justincase@example.com"
-          bind:value={approverEmail}
-        />
-      </div>
-      <BasicButton
-        text="Save Profile"
-        action={() => saveProfile(approverName, approverEmail)}
-      />
-    </div>
-  </BasicModal>
 {/if}

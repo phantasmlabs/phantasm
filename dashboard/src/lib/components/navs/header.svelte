@@ -2,7 +2,7 @@
   import { SidePanelOpenFilled } from "carbon-icons-svelte"
 </script>
 
-<header class="header space-x-6">
+<header class="header space-x-4">
   <button class="sidebar-button-toggle">
     <SidePanelOpenFilled size={24} />
   </button>
