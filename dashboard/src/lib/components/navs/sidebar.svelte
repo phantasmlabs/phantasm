@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { approver } from "$lib/store"
+  import type { ComponentType } from "svelte"
   import type { Approver } from "$lib/types"
+  import { approver } from "$lib/store"
   import { fade, slide } from "svelte/transition"
   import Wordmark from "$lib/components/utils/wordmark.svelte"
   import BasicModal from "$lib/components/modals/basic.svelte"
   import InputField from "$lib/components/inputs/field.svelte"
   import BasicButton from "$lib/components/buttons/basic.svelte"
-  import { SidePanelCloseFilled } from "carbon-icons-svelte"
+  import { SidePanelCloseFilled, Home, LogoGithub } from "carbon-icons-svelte"
 
   export let open: boolean = true
   export let close: () => void
@@ -29,6 +30,25 @@
     window.localStorage.setItem("approver", JSON.stringify($approver))
     showApproverModal = false
   }
+
+  type Navigation = {
+    icon: ComponentType
+    label: string
+    route: string
+  }
+
+  const navigation: Navigation[] = [
+    {
+      icon: Home,
+      label: "Home",
+      route: "/"
+    },
+    {
+      icon: LogoGithub,
+      label: "Repository",
+      route: "https://github.com/phantasmlabs/phantasm"
+    }
+  ]
 </script>
 
 {#if open}
@@ -39,11 +59,23 @@
     transition:fade={{ duration: 100 }}
   />
   <nav class="sidebar" transition:slide={{ axis: "x", duration: 250 }}>
-    <div class="control-section">
+    <div class="control-section space-x-4">
       <Wordmark size="sm" />
       <button class="sidebar-button-toggle" on:click={close}>
         <SidePanelCloseFilled size={24} />
       </button>
+    </div>
+    <div class="flex flex-col p-4 space-y-1">
+      {#each navigation as nav}
+        <a
+          href={nav.route}
+          class="navigation-link space-x-3"
+          target={nav.route.startsWith("http") ? "_blank" : null}
+        >
+          <svelte:component this={nav.icon} size={20} class="flex-none" />
+          <span>{nav.label}</span>
+        </a>
+      {/each}
     </div>
   </nav>
 {/if}
@@ -92,6 +124,14 @@
   .control-section {
     @apply flex items-center justify-between p-4;
     height: 80px;
+  }
+
+  .navigation-link {
+    @apply flex items-center p-2 rounded;
+  }
+
+  .navigation-link:hover {
+    @apply bg-gray-100;
   }
 
   @screen lg {
