@@ -16,7 +16,7 @@
   let fontClass = fontClasses[size]
 </script>
 
-<div class="flex items-center">
+<div class="flex items-center flex-none">
   <img src="/imgs/favicon256.png" alt="Logo" class={logoClass} />
   <span class="font-bold {fontClass}">Phantasm</span>
 </div>

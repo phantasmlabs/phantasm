@@ -22,7 +22,7 @@
 <style lang="postcss">
   .modal-container {
     @apply flex items-center justify-center;
-    @apply fixed top-0 left-0 w-screen h-dvh z-[1];
+    @apply fixed top-0 left-0 w-screen h-dvh z-10;
   }
 
   .backdrop {
@@ -31,7 +31,7 @@
   }
 
   .modal {
-    @apply flex flex-col p-6 z-[2];
+    @apply flex flex-col p-6 z-[11];
     @apply bg-white w-full h-full;
   }
 

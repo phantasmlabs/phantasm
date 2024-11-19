@@ -6,7 +6,6 @@
   import { connections, alerts } from "$lib/store"
   import { goto } from "$app/navigation"
   import Title from "$lib/components/utils/title.svelte"
-  import Wordmark from "$lib/components/utils/wordmark.svelte"
   import ApprovalCard from "$lib/components/cards/approval.svelte"
 
   export let data: PageData
@@ -105,7 +104,6 @@
 {#if connected}
   <div class="max-w-screen-sm mx-auto px-6 py-24">
     <div class="flex flex-col space-y-6">
-      <div class="-ml-2"><Wordmark size="md" /></div>
       <h1>Approval Requests</h1>
       {#if requests.length == 0}
         <p>There is no approval request to review at the moment.</p>
