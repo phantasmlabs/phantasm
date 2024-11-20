@@ -24,6 +24,23 @@ GitHub Generated Changelog URL
 
 <!-- Add release notes below this line. -->
 
+### 2024.11.19
+
+This release includes the following changes:
+
+- Added client to receiver authentication.
+- Include approver details in the response from the dashboard.
+- Improved dashboard layout with a sidebar.
+
+Authentication is disabled by default. To enable authentication, set the
+`PHANTASM_SECRET` environment variable in the server component before starting
+the server. The client will need to provide the secret when instantiating the
+client class to be able to send approval requests correctly.
+
+Approval response from the dashboard to the coordinator server now includes the
+approver details such as the name and email address. This information can be
+used to identify the approver who made the decision and enrich the audit logs.
+
 ### 2024.11.05
 
 This release includes the following changes:
