@@ -11,15 +11,29 @@ use tokio::sync::oneshot::Sender;
 use tokio_tungstenite::tungstenite::Message;
 use tonic::{Request, Response, Status};
 
+#[derive(Debug, Clone)]
+pub struct Configuration {
+    pub auto_approve: bool,
+}
+
+#[cfg(test)]
+impl Default for Configuration {
+    fn default() -> Self {
+        Configuration { auto_approve: false }
+    }
+}
+
 #[derive(Debug)]
 pub struct Phantasm {
+    config: Configuration,
     connections: Mutex<HashMap<ConnectionID, Connection>>,
     approvals: Mutex<HashMap<ApprovalID, Sender<ApprovalResponse>>>,
 }
 
 impl Phantasm {
-    pub fn open() -> Result<Self, Box<dyn Error>> {
+    pub fn open(config: &Configuration) -> Result<Self, Box<dyn Error>> {
         Ok(Phantasm {
+            config: config.clone(),
             connections: Mutex::new(HashMap::new()),
             approvals: Mutex::new(HashMap::new()),
         })
@@ -112,7 +126,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_receive_message() {
-        let phantasm = Phantasm::open().unwrap();
+        let config = Configuration::default();
+        let phantasm = Phantasm::open(&config).unwrap();
 
         // Simulate queueing a pending approval request.
         let approval_id = ApprovalID::new();

@@ -19,17 +19,25 @@ impl Receiver for Arc<Phantasm> {
         &self,
         request: Request<protos::GetApprovalRequest>,
     ) -> Result<Response<protos::GetApprovalResponse>, Status> {
+        let request = request.into_inner();
         let connection_id = match self.get_lightest_connection() {
             Some(id) => id,
             None => {
-                let message = "No approver is available at the moment";
-                return Err(Status::unavailable(message));
+                if self.config.auto_approve {
+                    return Ok(Response::new(protos::GetApprovalResponse {
+                        approved: true,
+                        parameters: request.parameters.clone(),
+                    }));
+                } else {
+                    let message = "No approver is available at the moment";
+                    return Err(Status::unavailable(message));
+                }
             },
         };
 
         // Unwrap is safe because the connection ID is guaranteed to exist.
         let connection = self.get_connection(&connection_id).unwrap();
-        let message = ApprovalRequest::from(request.into_inner());
+        let message = ApprovalRequest::from(request);
         let approval_id = message.id;
         tracing::info!("An approval request is created: {approval_id}");
 
@@ -72,7 +80,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_heartbeat() {
-        let phantasm = Phantasm::open().unwrap();
+        let config = Configuration::default();
+        let phantasm = Phantasm::open(&config).unwrap();
         let service = Arc::new(phantasm);
 
         let request = Request::new(());

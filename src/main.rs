@@ -7,7 +7,7 @@ mod types;
 use clap::{arg, ArgMatches, Command};
 use futures::{SinkExt, StreamExt};
 use protos::receiver_server::ReceiverServer;
-use services::Phantasm;
+use services::{Configuration, Phantasm};
 use std::env;
 use std::net::{IpAddr, Ipv4Addr};
 use std::sync::Arc;
@@ -56,12 +56,22 @@ fn start_command() -> Command {
         .arg(arg_coordinator_port)
 }
 
+fn configuration() -> Configuration {
+    let auto_approve = env::var("PHANTASM_AUTO_APPROVE")
+        .map(|value| value.parse::<bool>().unwrap_or_default())
+        .unwrap_or_default();
+
+    Configuration { auto_approve }
+}
+
 async fn start_handler(args: &ArgMatches) {
     // Unwrapping is safe here because the arguments are validated by Clap.
     let receiver_port = *args.get_one::<u16>("receiver-port").unwrap();
     let coordinator_port = *args.get_one::<u16>("coordinator-port").unwrap();
 
-    let service = Arc::new(Phantasm::open().expect("Failed to open Phantasm"));
+    let config = configuration();
+    let phantasm = Phantasm::open(&config).expect("Failed to open Phantasm");
+    let service = Arc::new(phantasm);
 
     let receiver_service = service.clone();
     let receiver_server = tokio::spawn(async move {
