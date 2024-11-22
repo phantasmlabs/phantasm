@@ -28,3 +28,19 @@ communicate with the Receiver Server.
     from phantasmpy import Phantasm
     phantasm = Phantasm(secret="secretkey")
     ```
+
+## Auto Approval
+
+There are times when an approver is not available to approve an action call. By
+default, Phantasm will return an error response with unavailable status code. If
+you want to automatically approve all actions when no approver is available, you
+can enable the auto-approval feature by setting the `PHANTASM_AUTO_APPROVAL`
+environment variable to true.
+
+```bash
+docker run -e PHANTASM_AUTO_APPROVAL=true ...
+```
+
+!!! warning
+
+    Enabling auto-approval is not recommended for production environments.
