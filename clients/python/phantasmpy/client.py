@@ -1,6 +1,7 @@
 import grpc
 import json
-from typing import Any, Dict
+from typing import Any, Callable
+from functools import wraps
 from google.protobuf.empty_pb2 import Empty
 from .stubs import receiver_pb2 as protos
 from .stubs.receiver_pb2_grpc import ReceiverStub
@@ -72,6 +73,16 @@ class Phantasm:
             approved=response.approved,
             parameters=response.parameters or "",
         )
+
+    def require_approval(self, with_parameters: bool = True):
+        def decorator(function: Callable):
+            @wraps(function)
+            def wrapper(*args, **kwargs):
+                # TODO: Implement the decorator
+                pass
+
+            return wrapper
+        return decorator
 
 
 def test_get_approval():
