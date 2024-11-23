@@ -74,7 +74,7 @@ class Phantasm:
             parameters=response.parameters or "",
         )
 
-    def require_approval(self, with_parameters: bool = True):
+    def require_approval(self, with_parameters: bool = True) -> Callable:
         """Decorator to request approval before executing a function.
 
         By default, the decorator will use the parameters provided by the
@@ -97,9 +97,9 @@ class Phantasm:
         ```
         """
 
-        def decorator(function: Callable):
+        def decorator(function: Callable) -> Callable:
             @wraps(function)
-            def wrapper(**kwargs):
+            def wrapper(**kwargs) -> Callable:
                 name = function.__name__
                 docs = function.__doc__ or ""
                 response = self.get_approval(
