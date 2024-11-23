@@ -75,6 +75,28 @@ class Phantasm:
         )
 
     def require_approval(self, with_parameters: bool = True):
+        """Decorator to request approval before executing a function.
+
+        By default, the decorator will use the parameters provided by the
+        approvers to call the function. If you want to use the original
+        parameters, set `with_parameters` to false.
+
+        This decorator raises exceptions if:
+        - The approval request is rejected.
+        - Error when requesting approval from the server.
+
+        Example:
+
+        ```py
+        phantasm = Phantasm()
+        @phantasm.require_approval()
+        def double(x: int) -> int:
+            return x * 2
+
+        double(x=5)
+        ```
+        """
+
         def decorator(function: Callable):
             @wraps(function)
             def wrapper(**kwargs):
@@ -91,7 +113,7 @@ class Phantasm:
                         kwargs = response.parameters
                     return function(**kwargs)
 
-                raise PermissionError("The approval request is rejected.")
+                raise PermissionError("The approval request is not approved.")
 
             return wrapper
 
