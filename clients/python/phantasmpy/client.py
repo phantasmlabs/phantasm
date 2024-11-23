@@ -77,30 +77,33 @@ class Phantasm:
     def require_approval(self, with_parameters: bool = True):
         def decorator(function: Callable):
             @wraps(function)
-            def wrapper(*args, **kwargs):
-                # TODO: Implement the decorator
-                pass
+            def wrapper(**kwargs):
+                name = function.__name__
+                docs = function.__doc__ or ""
+                response = self.get_approval(
+                    name=name,
+                    parameters=kwargs,
+                    context=docs,
+                )
+
+                if response.approved:
+                    if with_parameters:
+                        kwargs = response.parameters
+                    return function(**kwargs)
+
+                raise PermissionError("The approval request is rejected.")
 
             return wrapper
+
         return decorator
 
 
 def test_get_approval():
-    params = {
-        "x": 5,
-        "y": 10,
-    }
-
     phantasm = Phantasm()
-    response = phantasm.get_approval(
-        name="multiply",
-        parameters=params,
-        context="Multiply two numbers: x and y.",
-    )
 
-    if response.approved:
-        result = response.parameters["x"] * response.parameters["y"]
-        print("Request Approved")
-        print(f"Result: {result}")
-    else:
-        print("Request Rejected")
+    @phantasm.require_approval()
+    def multiply(x: int, y: int) -> int:
+        """Multiply two numbers, x and y."""
+        return x * y
+
+    print(multiply(x=5, y=10))
