@@ -15,23 +15,14 @@ adding an approval workflow to your function:
 
 ```py
 from phantasmpy import Phantasm
+phantasm = Phantasm()
 
-# Replace with your own function and parameters.
-parameters = {...}
+# Replace with your own function.
+@phantasm.require_approval()
 def schedule_meeting(...):
     pass
 
-phantasm = Phantasm()
-response = phantasm.get_approval(
-    name="schedule_meeting",
-    parameters=parameters
-)
-
-if response.approved:
-    # Do this only if you trust the approvers.
-    schedule_meeting(**response.parameters)
-else:
-    fallback()
+schedule_meeting(...)
 ```
 
 ## Advanced Usage With LangChain
